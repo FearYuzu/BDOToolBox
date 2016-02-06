@@ -1,0 +1,72 @@
+﻿<Window x:Class="bdo_toolbox.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:bdo_toolbox"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500.432" Width="760.406" Opacity="1.0" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen" Background="#FF111111" ResizeMode="NoResize">
+    <Grid>
+
+        <Image x:Name="bg_jpg" Margin="-372,-172,-397,-188" Source="bg.jpg" Stretch="Fill" Opacity="0.5"/>
+        <Label x:Name="title" Content="BDO ToolBox" HorizontalAlignment="Left" Margin="130,57,0,0" VerticalAlignment="Top" Foreground="White" FontSize="32">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Button x:Name="Install" Content="日本語パッチインストール" HorizontalAlignment="Left" Margin="51,161,0,0" VerticalAlignment="Top" Width="199" Height="40" Click="applyBtn_Click" BorderBrush="Black" Background="{x:Null}" Foreground="White">
+            <Button.OpacityMask>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FFFF9C9C" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.OpacityMask>
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="Uninstall" Content="日本語パッチアンインストール" HorizontalAlignment="Left" Margin="51,219,0,0" VerticalAlignment="Top" Width="199" Height="40" Click="deleteBtn_Click" Background="#00DDDDDD" Foreground="White" BorderBrush="#FF060303">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="RoutingAssigner" Content="ルーティングアサイナ" HorizontalAlignment="Left" Margin="51,273,0,0" VerticalAlignment="Top" Width="199" Height="40" Click="RoutingAssigner_Click" BorderBrush="Black" Foreground="White" Background="#00DDDDDD">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="exit" Content="Exit" HorizontalAlignment="Left" Margin="51,423,0,0" VerticalAlignment="Top" Width="156" Height="32" Click="exit_Click"/>
+        <Label x:Name="label" Content="Version 0.05α" HorizontalAlignment="Left" Margin="364,76,0,0" VerticalAlignment="Top" Foreground="White"/>
+        <Button x:Name="Ping_Show" Content="Ping表示" HorizontalAlignment="Left" Margin="51,327,0,0" VerticalAlignment="Top" Width="199" Height="40" Click="PingShow_Click" Background="#00DDDDDD" BorderBrush="Black" Foreground="White">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <GroupBox x:Name="targetsrv" Header="Target Server" HorizontalAlignment="Left" Margin="315,153,0,0" VerticalAlignment="Top" Height="176" Width="193" Foreground="#FFBBF0FF">
+
+
+        </GroupBox>
+
+        <GroupBox x:Name="targetlang" Header="Target Language" HorizontalAlignment="Left" Margin="531,153,0,0" VerticalAlignment="Top" Height="176" Width="193" Foreground="#FFBBF0FF">
+
+            <StackPanel Orientation="Horizontal" Name="Stack1">
+
+
+            </StackPanel>
+        </GroupBox>
+        <RadioButton x:Name="targetsrv_jp" GroupName="Server" Content="Japan" HorizontalAlignment="Left" Margin="331,179,0,0" VerticalAlignment="Top" Foreground="White" Checked="targetsrv_jp_Checked"/>
+        <RadioButton x:Name="targersrv_kr"  GroupName="Server" Content="Korea" HorizontalAlignment="Left" Margin="331,199,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
+        <RadioButton x:Name="targetsrv_eu"  GroupName="Server" Content="Europe/North America" HorizontalAlignment="Left" Margin="331,219,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
+        <RadioButton x:Name="targetsrv_ru" GroupName="Server" Content="Russia" HorizontalAlignment="Left" Margin="331,239,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
+
+        <Button x:Name="config" Content="Configuration" HorizontalAlignment="Left" Margin="619,19,0,0" VerticalAlignment="Top" Width="120" Height="32" Background="White" Opacity="0.5" OpacityMask="#FF3E0C0C" BorderBrush="White" Click="Config_Click"/>
+        <GroupBox x:Name="groupBox" Header="Version Info / Patch Note" HorizontalAlignment="Left" Height="141" Margin="315,334,0,0" VerticalAlignment="Top" Width="409" Foreground="#FFBBF0FF"/>
+        <Label x:Name="PatchInfo" Content="" HorizontalAlignment="Left" Margin="331,356,0,0" VerticalAlignment="Top" Foreground="#FFFFFEFE"/>
+        <RadioButton x:Name="lang_ja" GroupName="Language" Content="Japanese" HorizontalAlignment="Left" Margin="544,180,0,0" VerticalAlignment="Top" Foreground="White"/>
+        <RadioButton x:Name="lang_en" GroupName="Language" Content="English" HorizontalAlignment="Left" Margin="544,199,0,0" VerticalAlignment="Top" Foreground="White" Checked="lang_en_Checked"/>
+        <RadioButton x:Name="lang_scn" GroupName="Language" Content="Chinese (simplified)" HorizontalAlignment="Left" Margin="544,219,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
+        <RadioButton x:Name="lang_tcn" GroupName="Language" Content="Chinese (Traditional)" HorizontalAlignment="Left" Margin="544,239,0,0" VerticalAlignment="Top" Foreground="White"/>
+        <RadioButton x:Name="lang_ru"  GroupName="Language" Content="Russian" HorizontalAlignment="Left" Margin="544,259,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
+        <Image x:Name="black1_png" Margin="27,23,656,398" Source="black1.png" Stretch="Fill"/>
+    </Grid>
+</Window>
