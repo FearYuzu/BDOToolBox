@@ -26,10 +26,14 @@ namespace bdo_toolbox
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static event FileSystemEventHandler WatcherChanged;
         public static DateTime CurrentTime = DateTime.Now;
         FileSystemWatcher ConfigWatchDog = new FileSystemWatcher();
+        static string BDOToolBoxBaseDir = Environment.GetCommandLineArgs()[0];
+        public static string BDOToolBoxDirFullPath = System.IO.Path.GetFullPath(BDOToolBoxBaseDir);
+        public static string BDOToolBoxStartupPath = System.IO.Path.GetDirectoryName(BDOToolBoxDirFullPath);
         bool builtflag;
-        string Language = null;
+        public string Language = null;
         //private ObservableCollection<MainWindow.Language> languages = new ObservableCollection<MainWindow.Language>();
         public string PingDestination ="";
         private IWebProxy proxySetting;
@@ -39,20 +43,44 @@ namespace bdo_toolbox
         public MainWindow()
         {
             InitializeComponent();
-           // ConfigWatchDog.Filter = "config.ini";
-           // ConfigWatchDog.Path = "/";
+            // ConfigWatchDog.Filter = "config.ini";
+            // ConfigWatchDog.Path = "/";
             //ConfigWatchDog.IncludeSubdirectories = false;
             //WaitForChangedResult WatchDog = ConfigWatchDog.WaitForChanged(WatcherChangeTypes.Changed);
             //if (WatchDog.TimedOut)
-           // {
-           //     return;
-           // }
-           // switch (WatchDog.ChangeType)
+            // {
+            //     return;
+            // }
+            // switch (WatchDog.ChangeType)
             //{
-           //     case WatcherChangeTypes.Changed:
+            //     case WatcherChangeTypes.Changed:
             //        ReadIni();
-             //       break;
-           // }
+            //       break;
+            // }
+            //this.Dispatcher.BeginInvoke(new Action(() =>
+           // {
+                
+                
+
+
+                    //イベントハンドラの削除
+                    
+               // }
+               // finally
+               // {
+                 //   if (ConfigWatchDog != null)
+                 //   {
+                    //後始末
+                    //ConfigWatchDog.Changed -= watcher_Changed;
+                    //ConfigWatchDog.Dispose();
+                       // ConfigWatchDog = null;
+                  //  }
+                //}
+        //
+            //UIスレッドで実行すべき処
+       //}));
+           
+            
             Activated += (s, e) =>
             {
                 if (flg)
@@ -111,88 +139,107 @@ namespace bdo_toolbox
         }
         public void ReadIni()
         {
-            StreamReader SettingRead = new StreamReader("config.ini", false);
-            string stresult = string.Empty;
-            
-            var ReadLineCount = 0;
-            string sttemp = string.Empty;
-            bdo_toolbox.config conf = new config();
-            while (SettingRead.Peek() >= 0)
+            this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                // ファイルを 1 行ずつ読み込む
-                string stBuffer = SettingRead.ReadToEnd();
-                if(stBuffer.Contains("UILang = Japanese"))
+                StreamReader SettingRead = new StreamReader(new FileStream("config.ini", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+                string stresult = string.Empty;
+
+                var ReadLineCount = 0;
+                string sttemp = string.Empty;
+                bdo_toolbox.config conf = new config();
+                while (SettingRead.Peek() >= 0)
                 {
-                    conf.ChangeLangToJapanese();
-                    Language = "Japanese";
+                    // ファイルを 1 行ずつ読み込む
+                    string stBuffer = SettingRead.ReadLine();
+                    if (stBuffer.Contains("UILang = Japanese"))
+                    {
+                        config.Content = "設定";
+                        lang_en.Content = "英語";
+                        lang_ja.Content = "日本語";
+                        lang_scn.Content = "中国語(簡体)";
+                        lang_tcn.Content = "中国語(繁体）";
+                        lang_ru.Content = "ロシア語";
+                        targersrv_kr.Content = "韓国";
+                        targetsrv_eu.Content = "北米/欧州";
+                        targetsrv_jp.Content = "日本";
+                        targetsrv_ru.Content = "ロシア";
+                        Install.Content = "パッチインストール";
+                        Uninstall.Content = "パッチアンインストール";
+                        RoutingAssigner.Content = "ルーティングアサイナ";
+                        Ping_Show.Content = "Ping表示";
+                        Language = "Japanese";
+                    }
+                    if (stBuffer.Contains("UILang = English"))
+                    {
+                        
+                        Language = "English";
+                        config.Content = "Settings";
+                        lang_en.Content = "English";
+                        lang_ja.Content = "Japanese";
+                        lang_scn.Content = "Chinese(simplified)";
+                        lang_tcn.Content = "Chinese(traditional)";
+                        lang_ru.Content = "Russian";
+                        targersrv_kr.Content = "Korea";
+                        targetsrv_eu.Content = "EU/NA";
+                        targetsrv_jp.Content = "Japan";
+                        targetsrv_ru.Content = "Russia";
+                        Install.Content = "Install Patch";
+                        Uninstall.Content = "Uninstall Patch";
+                        RoutingAssigner.Content = "Routing Assigner";
+                        Ping_Show.Content = "Show Ping";
+                        
+                    }
+                    if (stBuffer.Contains("UILang = T_Chinese"))
+                    {
+                        
+                        Language = "T_Chinese";
+                        config.Content = "設置";
+                        lang_en.Content = "英語";
+                        lang_ja.Content = "日本語";
+                        lang_scn.Content = "簡體中文";
+                        lang_tcn.Content = "繁體中文";
+                        lang_ru.Content = "俄語";
+                        targersrv_kr.Content = "韓服";
+                        targetsrv_eu.Content = "欧美服";
+                        targetsrv_jp.Content = "日服";
+                        targetsrv_ru.Content = "俄服";
+                        Install.Content = "安裝補丁";
+                        Uninstall.Content = "卸載補丁";
+                        RoutingAssigner.Content = "路由分配器";
+                        Ping_Show.Content = "顯示Ping";
+                        
+                    }
+                    if (stBuffer.Contains("UILang = S_Chinese"))
+                    {
+                        
+                        Language = "S_Chinese";
+                        config.Content = "设置";
+                        lang_en.Content = "英语";
+                        lang_ja.Content = "日语";
+                        lang_scn.Content = "简体中文";
+                        lang_tcn.Content = "繁体中文";
+                        lang_ru.Content = "俄语";
+                        targersrv_kr.Content = "韩服";
+                        targetsrv_eu.Content = "欧美服";
+                        targetsrv_jp.Content = "日服";
+                        targetsrv_ru.Content = "俄服";
+                        Install.Content = "安装补丁";
+                        Uninstall.Content = "卸载补丁";
+                        RoutingAssigner.Content = "路由分配器";
+                        Ping_Show.Content = "显示Ping";
+                        
+                    }
+                    if (stBuffer.Contains("UseBuiltData = 1"))
+                    {
+                        builtflag = true;
+                    }
+
                 }
-                if(stBuffer.Contains("UILang = English"))
-                {
-                    bdo_toolbox.config confg = new bdo_toolbox.config();
-                    Language = "English";
-                    config.Content = "Settings";
-                    lang_en.Content = "English";
-                    lang_ja.Content = "Japanese";
-                    lang_scn.Content = "Chinese(simplified)";
-                    lang_tcn.Content = "Chinese(traditional)";
-                    lang_ru.Content = "Russian";
-                    targersrv_kr.Content = "Korea";
-                    targetsrv_eu.Content = "EU/NA";
-                    targetsrv_jp.Content = "Japan";
-                    targetsrv_ru.Content = "Russia";
-                    Install.Content = "Install Patch";
-                    Uninstall.Content = "Uninstall Patch";
-                    RoutingAssigner.Content = "Routing Assigner";
-                    Ping_Show.Content = "Show Ping";
-                    confg.UILangFrame.Content = "";
-                    confg.UILangFrame.Content = "UI Language";
-                    confg.UILang_English.Content = "English";
-                    confg.UILang_Japanese.Content = "Japanese";
-                    confg.UILang_ChineseS.Content = "Chinese(simplified)";
-                    confg.PatchFrame.Content = "";
-                    confg.PatchFrame.Content = "Patch Settings";
-                    confg.upd.Content = "Update Server";
-                    confg.usebuiltdata.Content = "Use Built Data";
-                    confg.Apply.Content = "Apply";
-                }
-                if (stBuffer.Contains("UILang = T_Chinese"))
-                {
-                    bdo_toolbox.config confg = new bdo_toolbox.config();
-                    Language = "T_Chinese";
-                    config.Content = "設置";
-                    lang_en.Content = "英語";
-                    lang_ja.Content = "日本語";
-                    lang_scn.Content = "簡體中文";
-                    lang_tcn.Content = "繁體中文";
-                    lang_ru.Content = "俄語";
-                    targersrv_kr.Content = "韓服";
-                    targetsrv_eu.Content = "欧美服";
-                    targetsrv_jp.Content = "日服";
-                    targetsrv_ru.Content = "俄服";
-                    Install.Content = "安裝補丁";
-                    Uninstall.Content = "卸載補丁";
-                    RoutingAssigner.Content = "路由分配器";
-                    Ping_Show.Content = "顯示Ping";
-                    confg.UILangFrame.Content = "";
-                    confg.UILangFrame.Content = "UI Language";
-                    confg.UILang_English.Content = "English";
-                    confg.UILang_Japanese.Content = "Japanese";
-                    confg.UILang_ChineseS.Content = "Chinese(simplified)";
-                    confg.PatchFrame.Content = "";
-                    confg.PatchFrame.Content = "Patch Settings";
-                    confg.upd.Content = "Update Server";
-                    confg.usebuiltdata.Content = "Use Built Data";
-                    confg.Apply.Content = "Apply";
-                }
-                if (stBuffer.Contains("UseBuiltData = 1"))
-                {
-                    builtflag = true;
-                }
-                
-            }
-            SettingRead.Close();
-            SettingRead.Dispose();
-            SettingRead = null;
+                SettingRead.Close();
+                SettingRead.Dispose();
+                SettingRead = null;
+            }));
+    
 
         }
         private void applyBtn_Click(object sender, EventArgs e)
@@ -231,7 +278,7 @@ namespace bdo_toolbox
                 
                 if(builtflag == true)
                 {
-                    MessageBox.Show("1");
+                    
                     this.startPatchingNoBuild(text);
                 }
                 else
@@ -270,16 +317,67 @@ namespace bdo_toolbox
                         int num = (int)System.Windows.MessageBox.Show(string.Format("パッチャーフォルダを削除できません。, エラーコード:{0}", ex.Message));
                         return;
                     }
-                    int num2 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
+                    //int num2 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
+                    switch (Language)
+                    {
+                        case "English":
+                            MessageBox.Show("Folder was deleted successfully.");
+                            break;
+                        case "Japanese":
+                            MessageBox.Show("フォルダは正常に削除されました。");
+                            break;
+                        case "S_Chinese":
+                            MessageBox.Show("文件夹已成功删除。");
+                            break;
+                        case "T_Chinese":
+                            MessageBox.Show("文件夾已成功刪除。");
+                            break;
+
+
+                    }
                 }
                 else
                 {
-                    int num3 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
+                    //int num3 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
+                    switch (Language)
+                    {
+                        case "English":
+                            MessageBox.Show("Folder was deleted successfully.");
+                            break;
+                        case "Japanese":
+                            MessageBox.Show("フォルダは正常に削除されました。");
+                            break;
+                        case "S_Chinese":
+                            MessageBox.Show("文件夹已成功删除。");
+                            break;
+                        case "T_Chinese":
+                            MessageBox.Show("文件夾已成功刪除。");
+                            break;
+
+
+                    }
                 }
             }
             else
             {
-                int num4 = (int)System.Windows.MessageBox.Show("インストールフォルダが見つかりません。");
+                switch (Language)
+                {
+                    case "English":
+                        MessageBox.Show("Installation folder cannot be found.");
+                        break;
+                    case "Japanese":
+                        MessageBox.Show("インストール先フォルダが見つかりません。");
+                        break;
+                    case "S_Chinese":
+                        MessageBox.Show("安裝文件夾不能找到。");
+                        break;
+                    case "T_Chinese":
+                        MessageBox.Show("安裝文件夾不能找到。");
+                        break;
+
+
+                }
+                //int num4 = (int)System.Windows.MessageBox.Show("");
             }
         }
 
@@ -295,6 +393,7 @@ namespace bdo_toolbox
             {
                 
             }
+            // Target Server: Japan | Target Language: English
             if (targetsrv_jp.IsChecked == true && lang_en.IsChecked == true)
             {
                 webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/LD_JP_EN.zip", "data/LD_JP_EN.zip");
@@ -309,33 +408,7 @@ namespace bdo_toolbox
                 }
                 catch
                 {
-                    string text = this.gameInstallPath();
-                    bool flag = text != "" && Directory.Exists(text);
-                    if (flag)
-                    {
-                        bool flag2 = Directory.Exists(text + "\\prestringtable");
-                        if (flag2)
-                        {
-                            try
-                            {
-                                Directory.Delete(text + "\\prestringtable", true);
-                            }
-                            catch (Exception ex)
-                            {
-                                int num = (int)System.Windows.MessageBox.Show(string.Format("パッチャーフォルダを削除できません。, エラーコード:{0}", ex.Message));
-                                return;
-                            }
-                            //int num2 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
-                        }
-                        else
-                        {
-                            //int num3 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
-                        }
-                    }
-                    else
-                    {
-                        // int num4 = (int)System.Windows.MessageBox.Show("インストールフォルダが見つかりません。");
-                    }
+                    ResetPatch();
                     ZipFile zipFile = ZipFile.Read("data/LD_JP_EN.zip");
                     zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
@@ -343,38 +416,21 @@ namespace bdo_toolbox
                     zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
 
                 }
-                switch (Language)
-                {
-                    case "English":
-                        MessageBox.Show("Patching is Finished");
-                        break;
-                    case "Japanese":
-                        MessageBox.Show("パッチインストールが完了しました。");
-                        break;
-                    case "S_Chinese":
-                        MessageBox.Show("补丁安装完成了。");
-                        break;
-                    case "T_Chinese":
-                        MessageBox.Show("補丁安裝完成了。");
-                        break;
-
-
-                }
+                FinishedPatching_Message();
             }
+            
             if (targetsrv_jp.IsChecked == true && lang_scn.IsChecked == true)
             {
-                if (Language == "S_Chinese")
-                {
-                    MessageBox.Show("这个功能现在无法使用.");
-                }
+                UnAvailable_Message();
             } 
             {
 
             }
             if (targetsrv_eu.IsChecked == true)
             {
-               
+                UnAvailable_Message();
             }
+            // Target Server: Japan | Target Language: Japanese(Modified)
             if (targetsrv_jp.IsChecked == true && lang_ja.IsChecked == true)
             {
                 
@@ -391,33 +447,7 @@ namespace bdo_toolbox
                 }
                 catch
                 {
-                    string text = this.gameInstallPath();
-                    bool flag = text != "" && Directory.Exists(text);
-                    if (flag)
-                    {
-                        bool flag2 = Directory.Exists(text + "\\prestringtable");
-                        if (flag2)
-                        {
-                            try
-                            {
-                                Directory.Delete(text + "\\prestringtable", true);
-                            }
-                            catch (Exception ex)
-                            {
-                                int num = (int)System.Windows.MessageBox.Show(string.Format("パッチャーフォルダを削除できません。, エラーコード:{0}", ex.Message));
-                                return;
-                            }
-                            //int num2 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
-                        }
-                        else
-                        {
-                            //int num3 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
-                        }
-                    }
-                    else
-                    {
-                        // int num4 = (int)System.Windows.MessageBox.Show("インストールフォルダが見つかりません。");
-                    }
+                    ResetPatch();
                     ZipFile zipFile = ZipFile.Read("data/LD_JP_EN.zip");
                     zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
@@ -425,23 +455,7 @@ namespace bdo_toolbox
                     zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     
                 }
-                switch (Language)
-                {
-                    case "English":
-                        MessageBox.Show("Patching is Finished");
-                        break;
-                    case "Japanese":
-                        MessageBox.Show("パッチインストールが完了しました。");
-                        break;
-                    case "S_Chinese":
-                        MessageBox.Show("补丁安装完成了。");
-                        break;
-                    case "T_Chinese":
-                        MessageBox.Show("補丁安裝完成了。");
-                        break;
-
-
-                }
+                FinishedPatching_Message();
             }
            
             
@@ -462,33 +476,7 @@ namespace bdo_toolbox
                 }
                 catch
                 {
-                    string text = this.gameInstallPath();
-                    bool flag = text != "" && Directory.Exists(text);
-                    if (flag)
-                    {
-                        bool flag2 = Directory.Exists(text + "\\prestringtable");
-                        if (flag2)
-                        {
-                            try
-                            {
-                                Directory.Delete(text + "\\prestringtable", true);
-                            }
-                            catch (Exception ex)
-                            {
-                                int num = (int)System.Windows.MessageBox.Show(string.Format("パッチャーフォルダを削除できません。, エラーコード:{0}", ex.Message));
-                                return;
-                            }
-                            //int num2 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
-                        }
-                        else
-                        {
-                            //int num3 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
-                        }
-                    }
-                    else
-                    {
-                        // int num4 = (int)System.Windows.MessageBox.Show("インストールフォルダが見つかりません。");
-                    }
+                    ResetPatch();
                     ZipFile zipFile = ZipFile.Read("data/LD_JP_TCN.zip");
                     zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
@@ -497,23 +485,7 @@ namespace bdo_toolbox
 
                     
                 }
-                switch (Language)
-                {
-                    case "English":
-                        MessageBox.Show("Patching is Finished");
-                        break;
-                    case "Japanese":
-                        MessageBox.Show("パッチインストールが完了しました。");
-                        break;
-                    case "S_Chinese":
-                        MessageBox.Show("补丁安装完成了。");
-                        break;
-                    case "T_Chinese":
-                        MessageBox.Show("補丁安裝完成了。");
-                        break;
-
-
-                }
+                FinishedPatching_Message();
 
             }
             //end
@@ -848,6 +820,22 @@ namespace bdo_toolbox
         {
             //RoutingAssigner RA = new RoutingAssigner();
             //RA.Show();
+            UnAvailable_Message();
+        }
+
+        private void exit_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void PingShow_Click(object sender, RoutedEventArgs e)
+        {
+            ReadIni();
+            Ping Ping = new Ping();
+            Ping.Show();
+        }
+        public void UnAvailable_Message()
+        {
             switch (Language)
             {
                 case "Japanese":
@@ -864,24 +852,126 @@ namespace bdo_toolbox
                     break;
             }
         }
-
-        private void exit_Click(object sender, RoutedEventArgs e)
+        private void FinishedPatching_Message()
         {
-            Environment.Exit(0);
+            switch (Language)
+            {
+                case "English":
+                    MessageBox.Show("Patching is Finished");
+                    break;
+                case "Japanese":
+                    MessageBox.Show("パッチインストールが完了しました。");
+                    break;
+                case "S_Chinese":
+                    MessageBox.Show("补丁安装完成了。");
+                    break;
+                case "T_Chinese":
+                    MessageBox.Show("補丁安裝完成了。");
+                    break;
+            }
         }
-
-        private void PingShow_Click(object sender, RoutedEventArgs e)
+        private void ResetPatch()
         {
-            Ping Ping = new Ping();
-            Ping.Show();
+            string text = this.gameInstallPath();
+            bool flag = text != "" && Directory.Exists(text);
+            if (flag)
+            {
+                bool flag2 = Directory.Exists(text + "\\prestringtable");
+                if (flag2)
+                {
+                    try
+                    {
+                        Directory.Delete(text + "\\prestringtable", true);
+                    }
+                    catch (Exception ex)
+                    {
+                        int num = (int)System.Windows.MessageBox.Show(string.Format("Cannot Delete the Patch Folder., Err Code:{0}", ex.Message));
+                        return;
+                    }
+                    //int num2 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
+                }
+                else
+                {
+                    //int num3 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
+                }
+            }
+            else
+            {
+                // int num4 = (int)System.Windows.MessageBox.Show("インストールフォルダが見つかりません。");
+            }
         }
+        private void OnKeyDownHandler(object sender, KeyEventArgs e)
+        {
+            // 下がったキーがAキーの場合
+            
+            if (e.Key == Key.C)
+            {
+                bdo_toolbox.config conf = new config();
+                conf.Show();
+                string directoryPath = BDOToolBoxStartupPath;
+                string fileName = "config.ini";
 
+                try
+                {
+                    // ConfigWatchDog = new FileSystemWatcher();
+
+                    //監視するディレクトリを指定
+                    ConfigWatchDog.Path = directoryPath;
+
+                    //最終更新日時の変更のみを監視する
+                    ConfigWatchDog.NotifyFilter = NotifyFilters.LastWrite;
+
+                    //CheckFile.txtを監視
+                    ConfigWatchDog.Filter = fileName;
+
+                    //イベントハンドラの追加
+                    ConfigWatchDog.Changed += new System.IO.FileSystemEventHandler(watcher_Changed);
+                    ConfigWatchDog.Created += new System.IO.FileSystemEventHandler(watcher_Changed);
+                    ConfigWatchDog.Deleted += new System.IO.FileSystemEventHandler(watcher_Changed);
+
+                    //監視を開始する
+                    ConfigWatchDog.EnableRaisingEvents = true;
+                }
+                catch
+                {
+
+                }
+            }
+
+        }
         private void Config_Click(object sender, RoutedEventArgs e)
         {
             bdo_toolbox.config conf = new config();
             conf.Show();
+            string directoryPath = BDOToolBoxStartupPath;
+            string fileName = "config.ini";
 
-        }
+            try
+            {
+                // ConfigWatchDog = new FileSystemWatcher();
+
+                //監視するディレクトリを指定
+                ConfigWatchDog.Path = directoryPath;
+
+                //最終更新日時の変更のみを監視する
+                ConfigWatchDog.NotifyFilter = NotifyFilters.LastWrite;
+
+                //CheckFile.txtを監視
+                ConfigWatchDog.Filter = fileName;
+
+                //イベントハンドラの追加
+                ConfigWatchDog.Changed += new System.IO.FileSystemEventHandler(watcher_Changed);
+                ConfigWatchDog.Created += new System.IO.FileSystemEventHandler(watcher_Changed);
+                ConfigWatchDog.Deleted += new System.IO.FileSystemEventHandler(watcher_Changed);
+
+                //監視を開始する
+                ConfigWatchDog.EnableRaisingEvents = true;
+            }
+            catch
+            {
+                
+            }
+            }
 
         private void targetsrv_jp_Checked(object sender, RoutedEventArgs e)
         {
@@ -891,6 +981,39 @@ namespace bdo_toolbox
         private void lang_en_Checked(object sender, RoutedEventArgs e)
         {
             updatePatchInfo();
+        }
+        
+       
+        private void watcher_Changed(System.Object source, System.IO.FileSystemEventArgs e)
+        {
+            this.Dispatcher.BeginInvoke(new
+Action(() =>
+
+{
+    switch (e.ChangeType)
+    {
+        case System.IO.WatcherChangeTypes.Changed:
+            ReadIni();
+           // ConfigWatchDog.Dispose();
+           // ConfigWatchDog = null;
+            break;
+        case System.IO.WatcherChangeTypes.Created:
+            ReadIni();
+           // ConfigWatchDog.Dispose();
+           // ConfigWatchDog = null;
+            break;
+        case System.IO.WatcherChangeTypes.Deleted:
+            ReadIni();
+          //  ConfigWatchDog.Dispose();
+           // ConfigWatchDog = null;
+            break;
+    }
+
+        //UIスレッドで実行すべき処理
+
+}));
+           
+            
         }
     }
 }

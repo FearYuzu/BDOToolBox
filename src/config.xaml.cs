@@ -44,7 +44,7 @@ namespace bdo_toolbox
         }
         public void ReadConfigIni()
         {
-            StreamReader SettingRead = new StreamReader("config.ini", false);
+            StreamReader SettingRead = new StreamReader(new FileStream("config.ini", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
             string stresult = string.Empty;
             
             var ReadLineCount = 0;
@@ -53,7 +53,7 @@ namespace bdo_toolbox
             while (SettingRead.Peek() >= 0)
             {
                 // ファイルを 1 行ずつ読み込む
-                string stBuffer = SettingRead.ReadToEnd();
+                string stBuffer = SettingRead.ReadLine();
                 if(stBuffer.Contains("UILang = Japanese"))
                 {
                     MainWindow Main = new MainWindow();
@@ -113,24 +113,9 @@ namespace bdo_toolbox
         }
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-            
-            if(UILang_Japanese.IsChecked == true)
-            {
-                ChangeLangToJapanese();
-                WriteTheSettingsToIni();
-                this.Close();
-                
-                Main.ReadIni();
-            }
-            if(UILang_English.IsChecked == true)
-            {
-                WriteTheSettingsToIni();
-                ChangeLangToEnglish();
-                this.Close();
-                
-                Main.ReadIni();
-                
-            }
+
+            WriteTheSettingsToIni();
+            this.Close();
         }
         public void ChangeLangToJapanese()
         {
@@ -225,19 +210,19 @@ namespace bdo_toolbox
 
         private void UILang_Japanese_Clicked(object sender, RoutedEventArgs e)
         {
-            WriteTheSettingsToIni() ;
-            ReadConfigIni();
+           WriteTheSettingsToIni() ;
+           ReadConfigIni();
         }
 
         private void UILang_English_Clicked(object sender, RoutedEventArgs e)
         {
-            WriteTheSettingsToIni();
-            ReadConfigIni();
+           WriteTheSettingsToIni();
+           ReadConfigIni();
         }
 
         private void UILang_ChineseS_Clicked(object sender, RoutedEventArgs e)
         {
-            WriteTheSettingsToIni();
+           WriteTheSettingsToIni();
             ReadConfigIni();
         }
     }

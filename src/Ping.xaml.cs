@@ -21,12 +21,39 @@ namespace bdo_toolbox
     /// </summary>
     public partial class Ping : Window
     {
+        bool flg = true;
+        MainWindow main = new MainWindow();
         public Ping()
         {
-
+            
             InitializeComponent();
             this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
             PingProcess();
+            Activated += (s, e) =>
+            {
+                if (flg)
+                {
+                    flg = false;
+                    main.ReadIni();
+                    //MessageBox.Show(main.Language);
+                    switch (main.Language)
+                    {
+                        case "Japanese":
+                            
+                            MenuClose.Header = "閉じる";
+                            break;
+                        case "English":
+                            MenuClose.Header = "Close";
+                            break;
+                        case "T_Chinese":
+                            MenuClose.Header = "關閉";
+                            break;
+                        case "S_Chinese":
+                            MenuClose.Header = "关闭";
+                            break;
+                    }
+                }
+            };
         }
         public async void PingProcess()
         {
@@ -35,7 +62,7 @@ namespace bdo_toolbox
                 await Task.Run(() =>
                 {
                     System.Net.NetworkInformation.Ping p = new System.Net.NetworkInformation.Ping();
-                    PingReply Reply = p.Send("163.44.119.33");
+                    PingReply Reply = p.Send("133.130.113.6");
                     if (Reply.Status == IPStatus.Success)
                     {
                         ping.Dispatcher.BeginInvoke(new Action(() =>
@@ -52,5 +79,9 @@ namespace bdo_toolbox
 
         }
 
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
