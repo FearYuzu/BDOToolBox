@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Net.NetworkInformation;
+using System.IO;
 
 namespace bdo_toolbox
 {
@@ -34,7 +35,7 @@ namespace bdo_toolbox
                 if (flg)
                 {
                     flg = false;
-                    main.ReadIni();
+                    ReadConfigIni();
                     //MessageBox.Show(main.Language);
                     switch (main.Language)
                     {
@@ -82,6 +83,49 @@ namespace bdo_toolbox
         private void Close_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+        public void ReadConfigIni()
+        {
+            StreamReader SettingRead = new StreamReader(new FileStream("config.ini", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+            string stresult = string.Empty;
+
+            var ReadLineCount = 0;
+            string sttemp = string.Empty;
+            bdo_toolbox.config conf = new config();
+            while (SettingRead.Peek() >= 0)
+            {
+                // ファイルを 1 行ずつ読み込む
+                string stBuffer = SettingRead.ReadLine();
+                if (stBuffer.Contains("UILang = Japanese"))
+                {
+                    MenuClose.Header = "閉じる";
+                }
+                if (stBuffer.Contains("UILang = English"))
+                {
+
+                    MenuClose.Header = "Close";
+
+                }
+                if (stBuffer.Contains("UILang = S_Chinese"))
+                {
+                    
+                    MenuClose.Header = "关闭";
+                }
+                if (stBuffer.Contains("UILang = T_Chinese"))
+                {
+                    MenuClose.Header = "關閉";
+                }
+                if (stBuffer.Contains("UseBuiltData = 1"))
+                {
+                    //builtflag = true;
+                }
+                //MessageBox.Show(stBuffer);
+            }
+
+            SettingRead.Close();
+            SettingRead.Dispose();
+            SettingRead = null;
+
         }
     }
 }

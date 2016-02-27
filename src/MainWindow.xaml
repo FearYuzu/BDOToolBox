@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bdo_toolbox"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500.432" Width="760.406" Opacity="1.0" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen" Background="#FF111111" ResizeMode="NoResize">
+        Title="MainWindow" Height="500.432" Width="760.406" Opacity="1.0" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen" Background="#FF111111" ResizeMode="NoResize" KeyDown="Window_PreviewKeyDown">
     <Grid>
 
-        <Image x:Name="bg_jpg" Margin="-372,-172,-397,-188" Source="bg.jpg" Stretch="Fill" Opacity="0.5"/>
+        <Image x:Name="bg_jpg" Margin="-372,-172,-397,-188" Source="bg.jpg" Stretch="Fill" Opacity="0.3"/>
         <Label x:Name="title" Content="BDO ToolBox" HorizontalAlignment="Left" Margin="130,57,0,0" VerticalAlignment="Top" Foreground="White" FontSize="32">
             <Label.Effect>
                 <DropShadowEffect/>
@@ -35,8 +35,11 @@
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
-        <Button x:Name="exit" Content="Exit" HorizontalAlignment="Left" Margin="51,423,0,0" VerticalAlignment="Top" Width="156" Height="32" Click="exit_Click"/>
-        <Label x:Name="label" Content="Version 0.05α" HorizontalAlignment="Left" Margin="364,76,0,0" VerticalAlignment="Top" Foreground="White"/>
+        <Label x:Name="label" Content="Version 0.10 α" HorizontalAlignment="Left" Margin="364,76,0,0" VerticalAlignment="Top" Foreground="White">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
         <Button x:Name="Ping_Show" Content="Ping表示" HorizontalAlignment="Left" Margin="51,327,0,0" VerticalAlignment="Top" Width="199" Height="40" Click="PingShow_Click" Background="#00DDDDDD" BorderBrush="Black" Foreground="White">
             <Button.Effect>
                 <DropShadowEffect/>
@@ -58,15 +61,22 @@
         <RadioButton x:Name="targersrv_kr"  GroupName="Server" Content="Korea" HorizontalAlignment="Left" Margin="331,199,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
         <RadioButton x:Name="targetsrv_eu"  GroupName="Server" Content="Europe/North America" HorizontalAlignment="Left" Margin="331,219,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
         <RadioButton x:Name="targetsrv_ru" GroupName="Server" Content="Russia" HorizontalAlignment="Left" Margin="331,239,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
-
-        <Button x:Name="config" Content="Configuration" HorizontalAlignment="Left" Margin="619,19,0,0" VerticalAlignment="Top" Width="120" Height="32" Background="White" Opacity="0.5" OpacityMask="#FF3E0C0C" BorderBrush="White" Click="Config_Click"/>
         <GroupBox x:Name="groupBox" Header="Version Info / Patch Note" HorizontalAlignment="Left" Height="141" Margin="315,334,0,0" VerticalAlignment="Top" Width="409" Foreground="#FFBBF0FF"/>
-        <Label x:Name="PatchInfo" Content="" HorizontalAlignment="Left" Margin="331,356,0,0" VerticalAlignment="Top" Foreground="#FFFFFEFE"/>
-        <RadioButton x:Name="lang_ja" GroupName="Language" Content="Japanese" HorizontalAlignment="Left" Margin="544,180,0,0" VerticalAlignment="Top" Foreground="White"/>
+        <Label x:Name="PatchInfo" Content="" HorizontalAlignment="Left" Margin="331,356,0,0" VerticalAlignment="Top" Foreground="#FFFFFEFE">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <RadioButton x:Name="lang_ja" GroupName="Language" Content="Japanese" HorizontalAlignment="Left" Margin="544,180,0,0" VerticalAlignment="Top" Foreground="White" Checked="lang_ja_Checked"/>
         <RadioButton x:Name="lang_en" GroupName="Language" Content="English" HorizontalAlignment="Left" Margin="544,199,0,0" VerticalAlignment="Top" Foreground="White" Checked="lang_en_Checked"/>
         <RadioButton x:Name="lang_scn" GroupName="Language" Content="Chinese (simplified)" HorizontalAlignment="Left" Margin="544,219,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
-        <RadioButton x:Name="lang_tcn" GroupName="Language" Content="Chinese (Traditional)" HorizontalAlignment="Left" Margin="544,239,0,0" VerticalAlignment="Top" Foreground="White"/>
+        <RadioButton x:Name="lang_tcn" GroupName="Language" Content="Chinese (Traditional)" HorizontalAlignment="Left" Margin="544,239,0,0" VerticalAlignment="Top" Foreground="White" Checked="lang_tcn_Checked"/>
         <RadioButton x:Name="lang_ru"  GroupName="Language" Content="Russian" HorizontalAlignment="Left" Margin="544,259,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
         <Image x:Name="black1_png" Margin="27,23,656,398" Source="black1.png" Stretch="Fill"/>
+        <Label x:Name="label1" Content="Key Assign:             Config:(C) Version:(V)  Debug Menu:(D) Exit:(Esc)" HorizontalAlignment="Left" Margin="364,23,0,0" VerticalAlignment="Top" Foreground="White">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
     </Grid>
 </Window>

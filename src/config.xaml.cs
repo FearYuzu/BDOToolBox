@@ -32,6 +32,7 @@ namespace bdo_toolbox
                 {
                     flg = false;
                     ReadConfigIni();
+                    
                 }
             };
         }
@@ -58,13 +59,14 @@ namespace bdo_toolbox
                 {
                     MainWindow Main = new MainWindow();
                     Main.Install.Content = "パッチインストール";
-                    UILang_English.Content = "英語";
-                    UILang_Japanese.Content = "日本語";
-                    UILang_ChineseS.Content = "中国語(簡体）";
-                    UILang_ChineseT.Content = "中国語(繁体）";
+                    UILang_English.Content = "英語(English)";
+                    UILang_Japanese.Content = "日本語(japanese)";
+                    UILang_ChineseS.Content = "中国語(簡体）(S_Chinese)";
+                    UILang_ChineseT.Content = "中国語(繁体）(T_Chinese)";
                     upd.Content = "アップデートサーバー";
                     usebuiltdata.Content = "構築されたデータを使用";
-                    Apply.Content = "適用";
+                    Apply.Content = "適用(A)";
+                    UILang_Japanese.IsChecked = true;
                 }
                 if(stBuffer.Contains("UILang = English"))
                 {
@@ -78,27 +80,30 @@ namespace bdo_toolbox
                     UILang_ChineseT.Content = "Chinese(Traditional)";
                     upd.Content = "Update Server";
                     usebuiltdata.Content = "Use Built Data";
-                    Apply.Content = "Apply";
+                    Apply.Content = "Apply(A)";
+                    UILang_English.IsChecked = true;
                 }
                 if (stBuffer.Contains("UILang = S_Chinese"))
                 {
-                    UILang_English.Content = "英语";
-                    UILang_Japanese.Content = "日本语";
-                    UILang_ChineseS.Content = "简体中文";
-                    UILang_ChineseT.Content = "繁体中文";
+                    UILang_English.Content = "英语(English)";
+                    UILang_Japanese.Content = "日本语(Japanese)";
+                    UILang_ChineseS.Content = "简体中文(S_Chinese)";
+                    UILang_ChineseT.Content = "繁体中文(T_Chinese)";
                     upd.Content = "更新服务器URL";
                     usebuiltdata.Content = "使用构建的数据";
-                    Apply.Content = "应用";
+                    Apply.Content = "应用(A)";
+                    UILang_ChineseS.IsChecked = true;
                 }
                 if (stBuffer.Contains("UILang = T_Chinese"))
                 {
-                    UILang_English.Content = "英語";
-                    UILang_Japanese.Content = "日本語";
-                    UILang_ChineseS.Content = "簡體中文";
-                    UILang_ChineseT.Content = "繁體中文";
+                    UILang_English.Content = "英語(English)";
+                    UILang_Japanese.Content = "日本語（Japanese)";
+                    UILang_ChineseS.Content = "簡體中文(S_Chinese)";
+                    UILang_ChineseT.Content = "繁體中文(T_Chinese)";
                     upd.Content = "更新服務器URL";
                     usebuiltdata.Content = "使用構建的數據";
-                    Apply.Content = "應用";
+                    Apply.Content = "應用(A)";
+                    UILang_ChineseT.IsChecked = true;
                 }
                 if (stBuffer.Contains("UseBuiltData = 1"))
                 {
@@ -109,6 +114,7 @@ namespace bdo_toolbox
             
             SettingRead.Close();
             SettingRead.Dispose();
+            SettingRead = null;
 
         }
         private void Apply_Click(object sender, RoutedEventArgs e)
@@ -119,21 +125,7 @@ namespace bdo_toolbox
         }
         public void ChangeLangToJapanese()
         {
-            MainWindow Mainwindow = new MainWindow();
-            Mainwindow.config.Content = "設定";
-            Mainwindow.lang_en.Content = "英語";
-            Mainwindow.lang_ja.Content = "日本語";
-            Mainwindow.lang_scn.Content = "中国語(簡体)";
-            Mainwindow.lang_tcn.Content = "中国語(繁体）";
-            Mainwindow.lang_ru.Content = "ロシア語";
-            Mainwindow.targersrv_kr.Content = "韓国";
-            Mainwindow.targetsrv_eu.Content = "北米/欧州";
-            Mainwindow.targetsrv_jp.Content = "日本";
-            Mainwindow.targetsrv_ru.Content = "ロシア";
-            Mainwindow.Install.Content = "パッチインストール";
-            Mainwindow.Uninstall.Content = "パッチアンインストール";
-            Mainwindow.RoutingAssigner.Content = "ルーティングアサイナ";
-            Mainwindow.Ping_Show.Content = "Ping表示";
+           
             UILangFrame.Content = "";
             UILangFrame.Content = "UI言語";
             UILang_English.Content = "英語";
@@ -147,21 +139,7 @@ namespace bdo_toolbox
         }
         public void ChangeLangToEnglish()
         {
-            MainWindow Mainwindow = new MainWindow();
-            Mainwindow.config.Content = "Settings";
-            Mainwindow.lang_en.Content = "English";
-            Mainwindow.lang_ja.Content = "Japanese";
-            Mainwindow.lang_scn.Content = "Chinese(simplified)";
-            Mainwindow.lang_tcn.Content = "Chinese(traditional)";
-            Mainwindow.lang_ru.Content = "Russian";
-            Mainwindow.targersrv_kr.Content = "Korea";
-            Mainwindow.targetsrv_eu.Content = "EU/NA";
-            Mainwindow.targetsrv_jp.Content = "Japan";
-            Mainwindow.targetsrv_ru.Content = "Russia";
-            Mainwindow.Install.Content = "Install Patch";
-            Mainwindow.Uninstall.Content = "Uninstall Patch";
-            Mainwindow.RoutingAssigner.Content = "Routing Assigner";
-            Mainwindow.Ping_Show.Content = "Show Ping";
+            
             UILangFrame.Content = "";
             UILangFrame.Content = "UI Language";
             UILang_English.Content = "English";
@@ -224,6 +202,58 @@ namespace bdo_toolbox
         {
            WriteTheSettingsToIni();
             ReadConfigIni();
+        }
+        private void Window_KeyAssign(object sender, KeyEventArgs e)
+        {
+            string pushedKey = "";
+            switch (e.Key)
+            {
+                case Key.F1:
+                case Key.F2:
+                case Key.F3:
+                case Key.F4:
+                case Key.F5:
+                case Key.F6:
+                case Key.F7:
+                case Key.F8:
+                case Key.A:
+                    WriteTheSettingsToIni();
+                    this.Close();
+                    break;
+                case Key.C:
+                    break;
+                case Key.S:
+                    UILang_ChineseS.IsChecked = true;
+                    WriteTheSettingsToIni();
+                    ReadConfigIni();
+                    break;
+                case Key.T:
+                    UILang_ChineseT.IsChecked = true;
+                    WriteTheSettingsToIni();
+                    ReadConfigIni();
+                    break;
+                case Key.J:
+                    UILang_Japanese.IsChecked = true;
+                    WriteTheSettingsToIni();
+                    ReadConfigIni();
+                    break;
+                case Key.E:
+                    UILang_English.IsChecked = true;
+                    WriteTheSettingsToIni();
+                    ReadConfigIni();
+                    break;
+                case Key.F11:
+                case Key.F12:
+                    pushedKey = e.Key.ToString();
+                    break;
+                case Key.System:
+                    if (e.SystemKey == Key.F10)
+                    {
+                        pushedKey = "F10";
+                    }
+                    break;
+            }
+
         }
     }
 }

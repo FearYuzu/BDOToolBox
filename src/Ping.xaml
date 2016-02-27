@@ -6,6 +6,12 @@
         xmlns:local="clr-namespace:bdo_toolbox"
         mc:Ignorable="d"
         Title="Ping" Height="77.075" Width="340.411" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Visibility="Visible" Background="Transparent" Topmost="True">
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem x:Name="MenuClose" Header="閉じる" Click="Close_Click"/>
+            
+        </ContextMenu>
+    </Window.ContextMenu>
     <Grid>
         <Label x:Name="ping" Content="Ping:" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Foreground="#FF0DDE89" FontSize="21.333">
             <Label.Effect>

@@ -33,6 +33,8 @@ namespace bdo_toolbox
         public static string BDOToolBoxDirFullPath = System.IO.Path.GetFullPath(BDOToolBoxBaseDir);
         public static string BDOToolBoxStartupPath = System.IO.Path.GetDirectoryName(BDOToolBoxDirFullPath);
         bool builtflag;
+       
+        string return_value;
         public string Language = null;
         //private ObservableCollection<MainWindow.Language> languages = new ObservableCollection<MainWindow.Language>();
         public string PingDestination ="";
@@ -85,6 +87,8 @@ namespace bdo_toolbox
             {
                 if (flg)
                 {
+                    string test = this.officialVersion();
+                    //MessageBox.Show(test);
                     flg = false;
                     ReadIni();
                     updatePatchInfo();
@@ -153,11 +157,11 @@ namespace bdo_toolbox
                     string stBuffer = SettingRead.ReadLine();
                     if (stBuffer.Contains("UILang = Japanese"))
                     {
-                        config.Content = "設定";
+                       
                         lang_en.Content = "英語";
                         lang_ja.Content = "日本語";
                         lang_scn.Content = "中国語(簡体)";
-                        lang_tcn.Content = "中国語(繁体）";
+                        lang_tcn.Content = "中国語(繁体α）";
                         lang_ru.Content = "ロシア語";
                         targersrv_kr.Content = "韓国";
                         targetsrv_eu.Content = "北米/欧州";
@@ -173,11 +177,11 @@ namespace bdo_toolbox
                     {
                         
                         Language = "English";
-                        config.Content = "Settings";
+                        
                         lang_en.Content = "English";
                         lang_ja.Content = "Japanese";
                         lang_scn.Content = "Chinese(simplified)";
-                        lang_tcn.Content = "Chinese(traditional)";
+                        lang_tcn.Content = "Chinese(traditional α)";
                         lang_ru.Content = "Russian";
                         targersrv_kr.Content = "Korea";
                         targetsrv_eu.Content = "EU/NA";
@@ -193,11 +197,11 @@ namespace bdo_toolbox
                     {
                         
                         Language = "T_Chinese";
-                        config.Content = "設置";
+                        
                         lang_en.Content = "英語";
                         lang_ja.Content = "日本語";
                         lang_scn.Content = "簡體中文";
-                        lang_tcn.Content = "繁體中文";
+                        lang_tcn.Content = "繁體中文(α)";
                         lang_ru.Content = "俄語";
                         targersrv_kr.Content = "韓服";
                         targetsrv_eu.Content = "欧美服";
@@ -213,11 +217,11 @@ namespace bdo_toolbox
                     {
                         
                         Language = "S_Chinese";
-                        config.Content = "设置";
+                        
                         lang_en.Content = "英语";
                         lang_ja.Content = "日语";
                         lang_scn.Content = "简体中文";
-                        lang_tcn.Content = "繁体中文";
+                        lang_tcn.Content = "繁体中文(α)";
                         lang_ru.Content = "俄语";
                         targersrv_kr.Content = "韩服";
                         targetsrv_eu.Content = "欧美服";
@@ -295,7 +299,7 @@ namespace bdo_toolbox
             }
             else
             {
-                int num2 = (int)System.Windows.MessageBox.Show("ゲームのインストールフォルダを検出できませんでした。黒い砂漠が正しくインストールされているかご確認ください。");
+                InstallFolder_NotFound();
             }
         }
         // here you got pup op dialgos with errors
@@ -318,65 +322,17 @@ namespace bdo_toolbox
                         return;
                     }
                     //int num2 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
-                    switch (Language)
-                    {
-                        case "English":
-                            MessageBox.Show("Folder was deleted successfully.");
-                            break;
-                        case "Japanese":
-                            MessageBox.Show("フォルダは正常に削除されました。");
-                            break;
-                        case "S_Chinese":
-                            MessageBox.Show("文件夹已成功删除。");
-                            break;
-                        case "T_Chinese":
-                            MessageBox.Show("文件夾已成功刪除。");
-                            break;
-
-
-                    }
+                    PatchFolder_Deleted();
                 }
                 else
                 {
                     //int num3 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
-                    switch (Language)
-                    {
-                        case "English":
-                            MessageBox.Show("Folder was deleted successfully.");
-                            break;
-                        case "Japanese":
-                            MessageBox.Show("フォルダは正常に削除されました。");
-                            break;
-                        case "S_Chinese":
-                            MessageBox.Show("文件夹已成功删除。");
-                            break;
-                        case "T_Chinese":
-                            MessageBox.Show("文件夾已成功刪除。");
-                            break;
-
-
-                    }
+                    PatchFolder_Deleted();
                 }
             }
             else
             {
-                switch (Language)
-                {
-                    case "English":
-                        MessageBox.Show("Installation folder cannot be found.");
-                        break;
-                    case "Japanese":
-                        MessageBox.Show("インストール先フォルダが見つかりません。");
-                        break;
-                    case "S_Chinese":
-                        MessageBox.Show("安裝文件夾不能找到。");
-                        break;
-                    case "T_Chinese":
-                        MessageBox.Show("安裝文件夾不能找到。");
-                        break;
-
-
-                }
+                InstallFolder_NotFound();
                 //int num4 = (int)System.Windows.MessageBox.Show("");
             }
         }
@@ -404,7 +360,8 @@ namespace bdo_toolbox
                     zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-
+                    zipFile.Dispose();
+                    zipFile = null;
                 }
                 catch
                 {
@@ -414,9 +371,13 @@ namespace bdo_toolbox
                     zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+                    zipFile.Dispose();
+                    zipFile = null;
 
                 }
                 FinishedPatching_Message();
+                webclient.Dispose();
+                webclient = null;
             }
             
             if (targetsrv_jp.IsChecked == true && lang_scn.IsChecked == true)
@@ -443,7 +404,8 @@ namespace bdo_toolbox
                     zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-
+                    zipFile.Dispose();
+                    zipFile = null;
                 }
                 catch
                 {
@@ -453,9 +415,12 @@ namespace bdo_toolbox
                     zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    
+                    zipFile.Dispose();
+                    zipFile = null;
                 }
                 FinishedPatching_Message();
+                webclient.Dispose();
+                webclient = null;
             }
            
             
@@ -472,7 +437,8 @@ namespace bdo_toolbox
                     zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    
+                    zipFile.Dispose();
+                    zipFile = null;
                 }
                 catch
                 {
@@ -482,11 +448,13 @@ namespace bdo_toolbox
                     zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+                    zipFile.Dispose();
+                    zipFile = null;
 
-                    
                 }
                 FinishedPatching_Message();
-
+                webclient.Dispose();
+                webclient = null;
             }
             //end
 
@@ -709,24 +677,21 @@ namespace bdo_toolbox
             string localver = this.localVersion();
             string arg = (text != "") ? text : "N/A";
             //this.PatchInfo.Content = string.Format("Last Updated:\r\n{0}\r\n\r\nInformation:\r\n{1}\r\n\r\nInstalled Version:\r\n{2}", string.Format("{0}", (fileTime.Year == 1970) ? "N/A" : string.Format("Date: {0}\r\nTime: {1}", fileTime.ToString("MM/dd/yy"), fileTime.ToString("hh:mm:ss tt"))), arg, this.localVersion());
-            this.PatchInfo.Content = "Infomation: "+text;
+            this.PatchInfo.Content = text;
         }
 
         private string officialVersion()
         {
+            WebClient Download = new WebClient();
+            
             string result;
-            try
+
+            if (lang_tcn.IsChecked == true)
             {
-                result = new WebClient
-                {
-                    Proxy = this.proxySetting
-                    // Here you got information window with text
-                }.DownloadString("http://files.indigoflare.net/BDOToolBox/system/config.patch.version").Replace("\r", "").Replace("\n", "");
+                return_value = Download.DownloadString("http://files.indigoflare.net/BDOToolBox/system/patchinfo.tcn");
+
             }
-            catch
-            {
-                result = "";
-            }
+            result = return_value;
             return result;
         }
 
@@ -750,14 +715,15 @@ namespace bdo_toolbox
         {
             var TargetSrv = "" ;
             string KeyNameJP = string.Format("HKEY_CURRENT_USER\\SOFTWARE\\GameOn\\Pmang\\BlackDesert_live", Wow.Is64BitOperatingSystem ? "Wow6432Node\\" : "");
-            string keyNameNAEU = string.Format("HKEY_CURRENT_USER\\SOFTWARE\\DaumGames EU\\BlackDesertOnlineCBT1", Wow.Is64BitOperatingSystem ? "Wow6432Node\\" : "");
-            if(targetsrv_jp.IsChecked == true)
+            //string keyNameNAEU = string.Format("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{C1F96C92-7B8C-485F-A9CD-37A0708A2A60}", Wow.Is64BitOperatingSystem ? "Wow6432Node\\" : "");
+            string keyNameKR = string.Format("HKEY_CURRENT_USER\\SOFTWARE\\DaumGames\\black", Wow.Is64BitOperatingSystem ? "Wow6432Node\\" : "");
+            if (targetsrv_jp.IsChecked == true)
             {
                 TargetSrv = (string)Registry.GetValue(KeyNameJP, "location", "");
             }
             if (targetsrv_eu.IsChecked == true)
             {
-                TargetSrv = (string)Registry.GetValue(keyNameNAEU, "InstallPath", "");
+                //TargetSrv = (string)Registry.GetValue(keyNameNAEU, "InstallLocation", "");
             }
             return TargetSrv;
             
@@ -818,8 +784,9 @@ namespace bdo_toolbox
 
         private void RoutingAssigner_Click(object sender, RoutedEventArgs e)
         {
-            //RoutingAssigner RA = new RoutingAssigner();
+            RoutingAssigner RA = new RoutingAssigner();
             //RA.Show();
+            //RoutingAssigner_Guides();
             UnAvailable_Message();
         }
 
@@ -868,6 +835,85 @@ namespace bdo_toolbox
                 case "T_Chinese":
                     MessageBox.Show("補丁安裝完成了。");
                     break;
+            }
+        }
+        private void InstallFolder_NotExist()
+        {
+            switch (Language)
+            {
+                case "English":
+                    MessageBox.Show("Patching is Finished");
+                    break;
+                case "Japanese":
+                    MessageBox.Show("パッチインストールが完了しました。");
+                    break;
+                case "S_Chinese":
+                    MessageBox.Show("补丁安装完成了。");
+                    break;
+                case "T_Chinese":
+                    MessageBox.Show("補丁安裝完成了。");
+                    break;
+            }
+        }
+        private void InstallFolder_NotFound()
+        {
+            switch (Language)
+            {
+                case "English":
+                    
+                    MessageBox.Show("The game was not Installed.");
+                    break;
+                case "Japanese":
+                    MessageBox.Show("ゲームがインストールされていません。");
+                    break;
+                case "S_Chinese":
+                    MessageBox.Show("安裝文件夾不能找到。");
+                    break;
+                case "T_Chinese":
+                    MessageBox.Show("安裝文件夾不能找到。");
+                    break;
+
+
+            }
+        }
+        private void RoutingAssigner_Guides()
+        {
+            switch (Language)
+            {
+                case "Japanese":
+                    MessageBox.Show("ルーティングアサイナは黒い砂漠のためにルーティング設定を変更します。\nコマンドプロンプトのrouteコマンドを使用するため、管理者権限が必要です。\nさらにルーティングアサイナを使いルーティング設定を変更すると、一度インターネット接続がリセットされます。\nたとえば、あなたがオンラインゲームを遊んでいた場合、\nサーバーから切断されます。", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+                case "English":
+                    MessageBox.Show("Attention:\n\nRouting Assigner will give the routing settings for Black Desert to your PC.\nmust be run as administrator because Routing Assigner will use route commands.\nand your internet connection will be reset a once if performed the routing change.\nfor example, will be disconnected from server if you are playing a online games.\n", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+                case "T_Chinese":
+                    MessageBox.Show("注意：\n\n路由分配將給予黑色沙漠的路由設置到PC上。必須以管理員身份運行，因為路由分配器將使用route命令。\n如果執行路由的變化,\n你的互聯網連接將被重置一次。\n例如，如果你正在玩網絡遊戲,將從服務器斷開連接。", "注意", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+                case "S_Chinese":
+                    MessageBox.Show("注意：\n\n路由分配将给予黑色沙漠的路由设置到PC上。必须以管理员身份运行，因为路由分配器将使用route命令。 \n如果执行路由的变化,\n你的互联网连接将被重置一次。 \n例如，如果你正在玩网络游戏,将从服务器断开连接。", "注意", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+
+
+        }
+        }
+        private void PatchFolder_Deleted()
+        {
+            switch (Language)
+            {
+                case "English":
+                    MessageBox.Show("Folder was deleted successfully.");
+                    break;
+                case "Japanese":
+                    MessageBox.Show("フォルダは正常に削除されました。");
+                    break;
+                case "S_Chinese":
+                    MessageBox.Show("文件夹已成功删除。");
+                    break;
+                case "T_Chinese":
+                    MessageBox.Show("文件夾已成功刪除。");
+                    break;
+
+
             }
         }
         private void ResetPatch()
@@ -975,15 +1021,39 @@ namespace bdo_toolbox
 
         private void targetsrv_jp_Checked(object sender, RoutedEventArgs e)
         {
-            updatePatchInfo();
+            
         }
 
         private void lang_en_Checked(object sender, RoutedEventArgs e)
         {
-            updatePatchInfo();
+            WebClient Download = new WebClient();
+            string result;
+            return_value = Download.DownloadString("http://files.indigoflare.net/BDOToolBox/system/patchinfo.en").Replace("\\n", "");
+            this.PatchInfo.Content = return_value;
         }
-        
-       
+        private string FailedToReceivedDataFromServer()
+        {
+            var unavailable_message ="";
+            string return_value;
+            switch(Language)
+            {
+                case "Japanese":
+                    unavailable_message = "サーバーからデータを受信できませんでした。";
+                break;
+                case "English":
+                    unavailable_message = "couldn't received the data from server.";
+                break;
+                case "T_Chinese":
+                    unavailable_message = "無法從服務器接收數據";
+                break;
+                case "S_Chinese":
+                    unavailable_message = "无法从服务器接收数据";
+                break;
+
+
+            }
+            return unavailable_message;
+        }
         private void watcher_Changed(System.Object source, System.IO.FileSystemEventArgs e)
         {
             this.Dispatcher.BeginInvoke(new
@@ -1014,6 +1084,104 @@ Action(() =>
 }));
            
             
+        }
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            string pushedKey = "";
+            switch (e.Key)
+            {
+                case Key.F1:
+                case Key.F2:
+                case Key.F3:
+                case Key.F4:
+                case Key.F5:
+                case Key.F6:
+                case Key.F7:
+                case Key.F8:
+                case Key.Escape:
+                    Environment.Exit(0);
+                    break;
+                case Key.V:
+                    UnAvailable_Message();
+                    break;
+                case Key.D:UnAvailable_Message();
+                    break;
+                case Key.C:
+                    bdo_toolbox.config conf = new config();
+                    conf.Show();
+                    string directoryPath = BDOToolBoxStartupPath;
+                    string fileName = "config.ini";
+
+                    try
+                    {
+                        // ConfigWatchDog = new FileSystemWatcher();
+
+                        //監視するディレクトリを指定
+                        ConfigWatchDog.Path = directoryPath;
+
+                        //最終更新日時の変更のみを監視する
+                        ConfigWatchDog.NotifyFilter = NotifyFilters.LastWrite;
+
+                        //CheckFile.txtを監視
+                        ConfigWatchDog.Filter = fileName;
+
+                        //イベントハンドラの追加
+                        ConfigWatchDog.Changed += new System.IO.FileSystemEventHandler(watcher_Changed);
+                        ConfigWatchDog.Created += new System.IO.FileSystemEventHandler(watcher_Changed);
+                        ConfigWatchDog.Deleted += new System.IO.FileSystemEventHandler(watcher_Changed);
+
+                        //監視を開始する
+                        ConfigWatchDog.EnableRaisingEvents = true;
+                    }
+                    catch
+                    {
+
+                    }
+                    break;
+                case Key.F11:
+                case Key.F12:
+                    pushedKey = e.Key.ToString();
+                    break;
+                case Key.System:
+                    if (e.SystemKey == Key.F10)
+                    {
+                        pushedKey = "F10";
+                    }
+                    break;
+            }
+            
+        }
+        private void lang_tcn_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                WebClient Download = new WebClient();
+                string result;
+                return_value = Download.DownloadString("http://files.indigoflare.net/BDOToolBox/system/patchinfo.tcn").Replace("\\n", "");
+                this.PatchInfo.Content = return_value;
+            }
+            catch
+            {
+                this.PatchInfo.Content = FailedToReceivedDataFromServer();
+            }
+            
+        }
+
+        private void lang_ja_Checked(object sender, RoutedEventArgs e)
+        {
+            
+
+            try {
+                WebClient Download = new WebClient();
+                string result;
+                return_value = Download.DownloadString("http://files.indigoflare.net/BDOToolBox/system/patchinfo.jp");
+                this.PatchInfo.Content = return_value;
+            }
+            catch
+            {
+                
+                this.PatchInfo.Content = FailedToReceivedDataFromServer();
+            }
         }
     }
 }
