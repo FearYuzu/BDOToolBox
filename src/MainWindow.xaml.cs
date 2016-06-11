@@ -99,48 +99,7 @@ namespace bdo_toolbox
         {
             ReadIni();
         }
-        private void MainWindow_Load(object sender, EventArgs e)
-        {
-            
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("ja-JP");
-            //this.languages.Add(new MainWindow.Language("English", "english"));     //LANGUAGE1
-            //this.languages.Add(new MainWindow.Language("Polski", "polish"));       //LANGUAGE2
-            //this.languages.Add(new MainWindow.Language("Japanise", "japanise"));   //LANGUAGE3
-
-            // If you want remove languages, remove code or add "//" before code like in Language3
-            //this.languageList. = "Value";
-            //this.languageList.DisplayMember = "Display";
-            //this.languageList.DataSource = this.languages;
-            this.languageList.SelectedIndex = 0;
-           
-            string currPatchVersion = ((AssemblyFileVersionAttribute)Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version.ToString();
-            string serverPatchVersion;
-            try
-            {
-                serverPatchVersion = new WebClient
-                {
-                    Proxy = this.proxySetting
-                    // localisation of curretversion.php file. This code will check there is new updated .exe patcher. 
-                }.DownloadString("http://files.indigoflare.net/BDOToolBox/system/CurrentVersion.php").Replace("\r", "").Replace("\n", "");
-            }
-            catch
-            {
-                serverPatchVersion = null;
-            }
-            if (serverPatchVersion == null || serverPatchVersion.Equals(currPatchVersion))
-                return;
-
-            // localisation of .exe file with patcher. Use instalshield to build patcher
-            DownloadProgramUpdate downloadProgramUpdate = new DownloadProgramUpdate("http://blackdesert.com.pl/patch/ru/exe/setup.exe");
-            try
-            {
-               // int num = (int)downloadProgramUpdate.ShowDialog();
-            }
-            catch (TargetInvocationException ex)
-            {
-
-            }
-        }
+       
         public void ReadIni()
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
@@ -336,10 +295,8 @@ namespace bdo_toolbox
                 //int num4 = (int)System.Windows.MessageBox.Show("");
             }
         }
-
-        private void languageList_SelectedIndexChanged(object sender, EventArgs e)
+        private void RepaitClient_Click(object sender,EventArgs e)
         {
-            this.updatePatchInfo();
         }
         private void startPatchingNoBuild(string folder)
         {
@@ -432,6 +389,7 @@ namespace bdo_toolbox
                 webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/LD_JP_TCN.zip", "data/LD_JP_TCN.zip");
                 try
                 {
+                    
                     ZipFile zipFile = ZipFile.Read("data/LD_JP_TCN.zip");
                     zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
@@ -450,6 +408,57 @@ namespace bdo_toolbox
                     zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
                     zipFile.Dispose();
                     zipFile = null;
+
+                }
+                FinishedPatching_Message();
+                webclient.Dispose();
+                webclient = null;
+            }
+            // Targer Server: EU/NA | Target Language: Japanese
+            if (targetsrv_eu.IsChecked == true && lang_ja.IsChecked == true)
+            {
+
+                //webClient.DownloadDataAsync(new Uri(string.Format("http://files.indigoflare.net/bdotoolbox/patch/patch.zip")));
+                webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/LD_EN_JP.zip", "data/LD_EN_JP.zip");
+                webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/paz_mod.zip","data/paz_mod.zip");
+                try
+                {
+                    //Original PAZ Backup for recover the client state, won't do it if patch already installed. for protect the original PAZ.
+                    if (!File.Exists(folder + "PatchInstalled.bdotoolbox"))
+                    {
+                        File.Copy(folder + "paz/pad00000.meta", "data/backup/pad00000.meta");
+                        File.Copy(folder + "paz/PAD03254.PAZ", "data/backup/PAD03254.PAZ");
+                        File.Copy(folder + "paz/PAD03256.PAZ", "data/backup/PAD03256.PAZ");
+                        File.Copy(folder + "paz/PAD03307.PAZ", "data/backup/PAD03307.PAZ");
+                    }
+                    ZipFile zipFile = ZipFile.Read("data/LD_EN_JP.zip");
+                    ZipFile zip_pazmod = ZipFile.Read("data/paz_mod.zip");
+                    zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/en/");
+                    zipFile["stringtable_cutscene_en.xlsm"].Extract(folder + "prestringtable/en/");
+                    zipFile["stringtable_en.xlsm"].Extract(folder + "prestringtable/en/");
+                    zipFile["symbolnostringtable_en.xlsm"].Extract(folder + "prestringtable/en/");
+                    zipFile.Dispose();
+                    zip_pazmod.ExtractAll(folder + "paz",ExtractExistingFileAction.OverwriteSilently);
+                    zip_pazmod.Dispose();
+                    File.Create(folder + "PatchInstalled.bdotoolbox");
+                    zip_pazmod = null;
+                    zipFile = null;
+                    
+                }
+                catch
+                {
+                    ResetPatch();
+                    ZipFile zipFile = ZipFile.Read("data/LD_EN_JP.zip");
+                    ZipFile zip_pazmod = ZipFile.Read("data/paz_mod.zip");
+                    zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/en/");
+                    zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/en/");
+                    zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/en/");
+                    zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/en/");
+                    zipFile.Dispose();
+                    zipFile = null;
+                    zip_pazmod.ExtractAll(folder + "paz", ExtractExistingFileAction.OverwriteSilently);
+                    zip_pazmod.Dispose();
+                    zip_pazmod = null;
 
                 }
                 FinishedPatching_Message();
@@ -690,6 +699,10 @@ namespace bdo_toolbox
             {
                 return_value = Download.DownloadString("http://files.indigoflare.net/BDOToolBox/system/patchinfo.tcn");
 
+            }
+            if(lang_ja.IsChecked == true)
+            {
+                return_value = Download.DownloadString("http://files.indigoflare.net/BDOToolBox/system/patchinfo_en_jp.html");
             }
             result = return_value;
             return result;
@@ -1091,6 +1104,8 @@ Action(() =>
             switch (e.Key)
             {
                 case Key.F1:
+                    DebugRefresh_JPToTCN();
+                    break;
                 case Key.F2:
                 case Key.F3:
                 case Key.F4:
@@ -1183,5 +1198,100 @@ Action(() =>
                 this.PatchInfo.Content = FailedToReceivedDataFromServer();
             }
         }
+        private void DebugRefresh_JPToTCN()
+        {
+            string text = this.gameInstallPath();
+            bool flag = text != "" && Directory.Exists(text);
+            if (flag)
+            {
+                bool flag2 = Directory.Exists(text + "\\prestringtable");
+                if (flag2)
+                {
+                    try
+                    {
+                        Directory.Delete(text + "\\prestringtable", true);
+                    }
+                    catch (Exception ex)
+                    {
+                        //int num = (int)System.Windows.MessageBox.Show(string.Format("パッチャーフォルダを削除できません。, エラーコード:{0}", ex.Message));
+                        return;
+                    }
+                    //int num2 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
+                    // PatchFolder_Deleted();
+                }
+                else
+                {
+                    //int num3 = (int)System.Windows.MessageBox.Show("フォルダは正常に削除されました。");
+                    // PatchFolder_Deleted();
+                }
+            }
+            else
+            {
+                // InstallFolder_NotFound();
+                //int num4 = (int)System.Windows.MessageBox.Show("");
+            }
+            //
+            //
+            ReadIni();
+            text = this.gameInstallPath();
+            flag = Directory.Exists(text);
+            bdo_toolbox.config conf = new bdo_toolbox.config();
+
+            if (flag)
+            {
+                bool flag2 = Directory.Exists(text + "\\stringtable");
+                if (flag2)
+                {
+                    try
+                    {
+                        Directory.Delete(text + "\\stringtable", true);
+                    }
+                    catch
+                    {
+                    }
+                }
+                bool flag3 = !Directory.Exists(text + "\\prestringtable");
+                if (flag3)
+                {
+                    Directory.CreateDirectory(text + "\\prestringtable");
+                }
+                bool flag4 = !Directory.Exists(text + "\\prestringtable\\jp");
+                if (flag4)
+                {
+                    Directory.CreateDirectory(text + "\\prestringtable\\jp");
+                }
+                //bool flag5 = this.officialVersion().Equals(this.localVersion());
+                //if (flag5)
+                //{
+                WebClient webclient = new WebClient();
+                webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/LD_JP_TCN.zip", "data/LD_JP_TCN.zip");
+                try
+                {
+                    ZipFile zipFile = ZipFile.Read("data/LD_JP_TCN.zip");
+                    zipFile["LanguageData.xlsm"].Extract(text + "prestringtable/jp/");
+                    zipFile["stringtable_cutscene_jp.xlsm"].Extract(text + "prestringtable/jp/");
+                    zipFile["stringtable_jp.xlsm"].Extract(text + "prestringtable/jp/");
+                    zipFile["symbolnostringtable_jp.xlsm"].Extract(text + "prestringtable/jp/");
+                    zipFile.Dispose();
+                    zipFile = null;
+                }
+                catch
+                {
+                    ResetPatch();
+                    ZipFile zipFile = ZipFile.Read("data/LD_JP_TCN.zip");
+                    zipFile["LanguageData.xlsm"].Extract(text + "prestringtable/jp/");
+                    zipFile["stringtable_cutscene_jp.xlsm"].Extract(text + "prestringtable/jp/");
+                    zipFile["stringtable_jp.xlsm"].Extract(text + "prestringtable/jp/");
+                    zipFile["symbolnostringtable_jp.xlsm"].Extract(text + "prestringtable/jp/");
+                    zipFile.Dispose();
+                    zipFile = null;
+
+                }
+                FinishedPatching_Message();
+                webclient.Dispose();
+                webclient = null;
+            }
+        }
+
     }
 }

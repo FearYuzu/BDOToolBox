@@ -63,7 +63,7 @@ namespace bdo_toolbox
                 await Task.Run(() =>
                 {
                     System.Net.NetworkInformation.Ping p = new System.Net.NetworkInformation.Ping();
-                    PingReply Reply = p.Send("133.130.113.6");
+                    PingReply Reply = p.Send("163.44.119.33");
                     if (Reply.Status == IPStatus.Success)
                     {
                         ping.Dispatcher.BeginInvoke(new Action(() =>

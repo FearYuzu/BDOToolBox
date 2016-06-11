@@ -35,7 +35,7 @@
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
-        <Label x:Name="label" Content="Version 0.10 α" HorizontalAlignment="Left" Margin="364,76,0,0" VerticalAlignment="Top" Foreground="White">
+        <Label x:Name="label" Content="Version 0.11 α" HorizontalAlignment="Left" Margin="364,76,0,0" VerticalAlignment="Top" Foreground="White">
             <Label.Effect>
                 <DropShadowEffect/>
             </Label.Effect>
@@ -78,5 +78,10 @@
                 <DropShadowEffect/>
             </Label.Effect>
         </Label>
+        <Button x:Name="Repair_Client" Content="ファイル修復を行う" HorizontalAlignment="Left" Margin="51,380,0,0" VerticalAlignment="Top" Width="199" Height="40" Click="RepairClient_Click" Background="#00DDDDDD" BorderBrush="Black" Foreground="White">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
     </Grid>
 </Window>
