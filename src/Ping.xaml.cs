@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Net.NetworkInformation;
 using System.IO;
+using System.Windows.Threading;
 
 namespace bdo_toolbox
 {
@@ -23,109 +24,169 @@ namespace bdo_toolbox
     public partial class Ping : Window
     {
         bool flg = true;
+        private DispatcherTimer mTimer;
+        config conf = new config();
         MainWindow main = new MainWindow();
         public Ping()
         {
             
             InitializeComponent();
             this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
-            PingProcess();
             Activated += (s, e) =>
             {
                 if (flg)
                 {
                     flg = false;
-                    ReadConfigIni();
-                    //MessageBox.Show(main.Language);
-                    switch (main.Language)
-                    {
-                        case "Japanese":
-                            
-                            MenuClose.Header = "閉じる";
-                            break;
-                        case "English":
-                            MenuClose.Header = "Close";
-                            break;
-                        case "T_Chinese":
-                            MenuClose.Header = "關閉";
-                            break;
-                        case "S_Chinese":
-                            MenuClose.Header = "关闭";
-                            break;
-                    }
+                    PingUIUpdate();
                 }
             };
+            mTimer = new DispatcherTimer();
+            mTimer.Interval = TimeSpan.FromSeconds(MainWindow.TimeSpanSec);
+           
+            mTimer.Tick += new EventHandler(PingProcess);
+            mTimer.Start();
         }
-        public async void PingProcess()
+        public void PingProcess(object sender,EventArgs e)
         {
-            while (true)
+            PingReply Reply;
+            System.Net.NetworkInformation.Ping p = new System.Net.NetworkInformation.Ping();
+            switch (MainWindow.PingDestination)
             {
-                await Task.Run(() =>
-                {
-                    System.Net.NetworkInformation.Ping p = new System.Net.NetworkInformation.Ping();
-                    PingReply Reply = p.Send("163.44.119.33");
+                case "JP-Auth":
+                    
+                    Reply = p.Send("122.129.233.160");
                     if (Reply.Status == IPStatus.Success)
                     {
-                        ping.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            ping.Content = "Ping:" + Reply.RoundtripTime + "ms";
-                        })
-                        );
-                        
+                        ping.Content = "Ping:" + Reply.RoundtripTime + "ms";
                     }
-                });
+                    if (MainWindow.TimeSpanSec < 3)
+                    {
+                        main.PingingTimeSpan_NotAllowed();
+                        mTimer.Stop();
+                        mTimer.Interval = TimeSpan.FromSeconds(3);
+                        MainWindow.TimeSpanSec = 3;
+                        //MessageBox.Show("Alert" + "TimeSpan:" + main.TimeSpanSec);
+                        conf.WriteSettings();
+                        mTimer.Start();
+                    }
+                    break;
+                case "KR-Auth":
+                    
+                    Reply = p.Send("blackauth.black.game.daum.net");
+                    if (Reply.Status == IPStatus.Success)
+                    {
+                        ping.Content = "Ping:" + Reply.RoundtripTime + "ms";
+                    }
+                    if (MainWindow.TimeSpanSec < 3)
+                    {
+                        main.PingingTimeSpan_NotAllowed();
+                        mTimer.Stop();
+                        mTimer.Interval = TimeSpan.FromSeconds(3);
+                        MainWindow.TimeSpanSec = 3;
+                        //MessageBox.Show("Alert" + "TimeSpan:" + main.TimeSpanSec);
+                        conf.WriteSettings();
+                        mTimer.Start();
+                    }
+                    break;
+                case "JP-Tokyo":
+                    if (MainWindow.TimeSpanSec < 3)
+                    {
+                        main.PingingTimeSpan_NotAllowed();
+                        mTimer.Stop();
+                        mTimer.Interval = TimeSpan.FromSeconds(3);
+                        MainWindow.TimeSpanSec = 3;
+                        //MessageBox.Show("Alert" + "TimeSpan:" + main.TimeSpanSec);
+                        conf.WriteSettings();
+                        mTimer.Start();
+                    }
+                    break;
+                case "NA-Sanjose":
+                    if (MainWindow.TimeSpanSec < 3)
+                    {
+                        main.PingingTimeSpan_NotAllowed();
+                        mTimer.Stop();
+                        mTimer.Interval = TimeSpan.FromSeconds(3);
+                        MainWindow.TimeSpanSec = 3;
+                        //MessageBox.Show("Alert" + "TimeSpan:" + main.TimeSpanSec);
+                        conf.WriteSettings();
+                        mTimer.Start();
+                    }
+                    break;
+                    
             }
             
-            
+            //if (main.Destination == "KR-Auth" && main.TimeSpanSec < 3)
+            //{
+            //    main.PingingTimeSpan_NotAllowed();
+            //    mTimer.Stop();
+            //    mTimer.Interval = TimeSpan.FromSeconds(3);
+            //    main.TimeSpanSec = 3;
 
+            //    conf.WriteTheSettingsToIni();
+            //    mTimer.Start();
+               
+            //}
+            //if (main.Destination == "JP-Tokyo")
+            //{
+            //    System.Net.NetworkInformation.Ping p = new System.Net.NetworkInformation.Ping();
+            //    PingReply Reply = p.Send("133.130.113.6");
+            //    if (Reply.Status == IPStatus.Success)
+            //    {
+            //        ping.Content = "Ping:" + Reply.RoundtripTime + "ms";
+            //    }
+            //}
+            //if(main.Destination == "NA-Sanjose")
+            //{
+            //    System.Net.NetworkInformation.Ping p = new System.Net.NetworkInformation.Ping();
+            //    PingReply Reply = p.Send("163.44.119.33");
+            //    if (Reply.Status == IPStatus.Success)
+            //    {
+            //        ping.Content = "Ping:" + Reply.RoundtripTime + "ms";
+            //    }
+            //}
+            //if(main.Destination == "JP-Auth")
+            //{
+            //    System.Net.NetworkInformation.Ping p = new System.Net.NetworkInformation.Ping();
+            //    PingReply Reply = p.Send("122.129.233.160");
+            //    if (Reply.Status == IPStatus.Success)
+            //    {
+            //        ping.Content = "Ping:" + Reply.RoundtripTime + "ms";
+            //    }
+            //}
+            //if(main.Destination == "KR-Auth")
+            //{
+            //    System.Net.NetworkInformation.Ping p = new System.Net.NetworkInformation.Ping();
+            //    PingReply Reply = p.Send("blackauth.black.game.daum.net");
+            //    if (Reply.Status == IPStatus.Success)
+            //    {
+            //        ping.Content = "Ping:" + Reply.RoundtripTime + "ms";
+            //    }
+               
+            //}
         }
+      
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-        public void ReadConfigIni()
+        private void PingUIUpdate()
         {
-            StreamReader SettingRead = new StreamReader(new FileStream("config.ini", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-            string stresult = string.Empty;
-
-            var ReadLineCount = 0;
-            string sttemp = string.Empty;
-            bdo_toolbox.config conf = new config();
-            while (SettingRead.Peek() >= 0)
+            switch (MainWindow.Language)
             {
-                // ファイルを 1 行ずつ読み込む
-                string stBuffer = SettingRead.ReadLine();
-                if (stBuffer.Contains("UILang = Japanese"))
-                {
+                case "Japanese":
                     MenuClose.Header = "閉じる";
-                }
-                if (stBuffer.Contains("UILang = English"))
-                {
-
+                    break;
+                case "English":
                     MenuClose.Header = "Close";
-
-                }
-                if (stBuffer.Contains("UILang = S_Chinese"))
-                {
-                    
-                    MenuClose.Header = "关闭";
-                }
-                if (stBuffer.Contains("UILang = T_Chinese"))
-                {
+                    break;
+                case "HanT":
                     MenuClose.Header = "關閉";
-                }
-                if (stBuffer.Contains("UseBuiltData = 1"))
-                {
-                    //builtflag = true;
-                }
-                //MessageBox.Show(stBuffer);
+                    break;
+                case "HanS":
+                    MenuClose.Header = "关闭";
+                    break;
             }
-
-            SettingRead.Close();
-            SettingRead.Dispose();
-            SettingRead = null;
-
         }
     }
 }

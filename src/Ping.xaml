@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bdo_toolbox"
         mc:Ignorable="d"
-        Title="Ping" Height="77.075" Width="340.411" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Visibility="Visible" Background="Transparent" Topmost="True">
+        Title="Ping" Height="77.075" Width="500.411" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Visibility="Visible" Background="Transparent" Topmost="True">
     <Window.ContextMenu>
         <ContextMenu>
             <MenuItem x:Name="MenuClose" Header="閉じる" Click="Close_Click"/>
@@ -13,12 +13,12 @@
         </ContextMenu>
     </Window.ContextMenu>
     <Grid>
-        <Label x:Name="ping" Content="Ping:" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Foreground="#FF0DDE89" FontSize="21.333">
+        <Label x:Name="ping" Content="Ping:" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Foreground="#FF0DDE89" FontSize="30.333">
             <Label.Effect>
                 <DropShadowEffect Color="#FF0E0D0D"/>
             </Label.Effect>
         </Label>
-        <Label x:Name="Server" Content="Server:" HorizontalAlignment="Left" Margin="140,16,0,0" VerticalAlignment="Top" Foreground="#FF0DDE89" FontSize="21.333">
+        <Label x:Name="Server" Content="Server:" HorizontalAlignment="Left" Margin="257,17,0,0" VerticalAlignment="Top" Foreground="#FF0DDE89" FontSize="30.333">
             <Label.Effect>
                 <DropShadowEffect/>
             </Label.Effect>

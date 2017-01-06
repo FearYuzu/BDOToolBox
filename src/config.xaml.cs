@@ -21,18 +21,30 @@ namespace bdo_toolbox
     public partial class config : Window
     {
         bool flg = true;
-        MainWindow Main = new MainWindow();
+       
+        static MainWindow Main = new MainWindow();
+        
         public config()
         {
             InitializeComponent();
-            
+            UIWatchDog();
             Activated += (s, e) =>
             {
                 if (flg)
                 {
-                    flg = false;
-                    ReadConfigIni();
                     
+                    ConfigUIUpdate();
+                    InitializeUI();
+                    Main.UIUpdate();
+                    flg = false;
+                    if(MainWindow.IsUseMetaInjector == true)
+                    {
+                        UseMetaInjector.IsChecked = true;
+                    }
+                    if(MainWindow.IsUseMetaInjector == false)
+                    {
+                        UseMetaInjector.IsChecked = false;
+                    }     
                 }
             };
         }
@@ -43,144 +55,82 @@ namespace bdo_toolbox
             // Begin dragging the window
             this.DragMove();
         }
-        public void ReadConfigIni()
+        private void InitializeUI()
         {
-            StreamReader SettingRead = new StreamReader(new FileStream("config.ini", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-            string stresult = string.Empty;
-            
-            var ReadLineCount = 0;
-            string sttemp = string.Empty;
-            bdo_toolbox.config conf = new config();
-            while (SettingRead.Peek() >= 0)
+            switch (MainWindow.Language)
             {
-                // ファイルを 1 行ずつ読み込む
-                string stBuffer = SettingRead.ReadLine();
-                if(stBuffer.Contains("UILang = Japanese"))
-                {
-                    MainWindow Main = new MainWindow();
-                    Main.Install.Content = "パッチインストール";
-                    UILang_English.Content = "英語(English)";
-                    UILang_Japanese.Content = "日本語(japanese)";
-                    UILang_ChineseS.Content = "中国語(簡体）(S_Chinese)";
-                    UILang_ChineseT.Content = "中国語(繁体）(T_Chinese)";
-                    upd.Content = "アップデートサーバー";
-                    usebuiltdata.Content = "構築されたデータを使用";
-                    Apply.Content = "適用(A)";
+                case "Japanese":
                     UILang_Japanese.IsChecked = true;
-                }
-                if(stBuffer.Contains("UILang = English"))
-                {
-
-
-                    MainWindow Main = new MainWindow();
-                    Main.Install.Content ="Patch Install";
-                    UILang_English.Content = "English";
-                    UILang_Japanese.Content = "Japanese";
-                    UILang_ChineseS.Content = "Chinese(simplified)";
-                    UILang_ChineseT.Content = "Chinese(Traditional)";
-                    upd.Content = "Update Server";
-                    usebuiltdata.Content = "Use Built Data";
-                    Apply.Content = "Apply(A)";
+                    break;
+                case "English":
                     UILang_English.IsChecked = true;
-                }
-                if (stBuffer.Contains("UILang = S_Chinese"))
-                {
-                    UILang_English.Content = "英语(English)";
-                    UILang_Japanese.Content = "日本语(Japanese)";
-                    UILang_ChineseS.Content = "简体中文(S_Chinese)";
-                    UILang_ChineseT.Content = "繁体中文(T_Chinese)";
-                    upd.Content = "更新服务器URL";
-                    usebuiltdata.Content = "使用构建的数据";
-                    Apply.Content = "应用(A)";
+                    break;
+                case "HanS":
                     UILang_ChineseS.IsChecked = true;
-                }
-                if (stBuffer.Contains("UILang = T_Chinese"))
-                {
-                    UILang_English.Content = "英語(English)";
-                    UILang_Japanese.Content = "日本語（Japanese)";
-                    UILang_ChineseS.Content = "簡體中文(S_Chinese)";
-                    UILang_ChineseT.Content = "繁體中文(T_Chinese)";
-                    upd.Content = "更新服務器URL";
-                    usebuiltdata.Content = "使用構建的數據";
-                    Apply.Content = "應用(A)";
+                    break;
+                case "HanT":
                     UILang_ChineseT.IsChecked = true;
-                }
-                if (stBuffer.Contains("UseBuiltData = 1"))
-                {
-                    //builtflag = true;
-                }
-                //MessageBox.Show(stBuffer);
+                    break;
             }
-            
-            SettingRead.Close();
-            SettingRead.Dispose();
-            SettingRead = null;
-
+        }
+        private void UIWatchDog()
+        {
+            if(UseMetaInjector.IsChecked == false)
+            {
+                MessageBox.Show("is now false");
+                MainWindow.IsUseMetaInjector = false;
+            }
+            if(UseMetaInjector.IsChecked == true)
+            {
+                MessageBox.Show("is now true");
+                MainWindow.IsUseMetaInjector = true;
+            }
         }
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
 
-            WriteTheSettingsToIni();
+            WriteSettings();
+            Main.UIUpdate();
             this.Close();
         }
-        public void ChangeLangToJapanese()
+        private void ConfigUIUpdate()
         {
-           
-            UILangFrame.Content = "";
-            UILangFrame.Content = "UI言語";
-            UILang_English.Content = "英語";
-            UILang_Japanese.Content = "日本語";
-            UILang_ChineseS.Content = "中国語(簡体）";
-            PatchFrame.Content = "";
-            PatchFrame.Content = "パッチ設定";
-            upd.Content = "アップデートサーバー";
-            usebuiltdata.Content = "構築されたデータを使用";
-            Apply.Content = "適用";
+            UILang_Japanese.Content = DefineUIContent.UILang_Japanese;
+            UILang_English.Content = DefineUIContent.UILang_English;
+            UILang_ChineseT.Content = DefineUIContent.UILang_HanT;
+            UILang_ChineseS.Content = DefineUIContent.UILang_HanS;
+            UseMetaInjector.Content = DefineUIContent.UIPatchUseMetaInjector;
+            upd.Content = DefineUIContent.UIPatchServer;
+
         }
-        public void ChangeLangToEnglish()
+        public void WriteSettings()
         {
-            
-            UILangFrame.Content = "";
-            UILangFrame.Content = "UI Language";
-            UILang_English.Content = "English";
-            UILang_Japanese.Content = "Japanese";
-            UILang_ChineseS.Content = "Chinese(simplified)";
-            PatchFrame.Content = "";
-            PatchFrame.Content = "Patch Settings";
-            upd.Content = "Update Server";
-            usebuiltdata.Content = "Use Built Data";
-            Apply.Content = "Apply";
-        }
-        public void WriteTheSettingsToIni()
-        {
+            MessageBox.Show(MainWindow.IsUseMetaInjector.ToString());
             StreamWriter Write = new StreamWriter("config.ini", false);
-            Write.WriteLine("[General]");
+            Write.WriteLine("[key]=[content]");
             if(UILang_Japanese.IsChecked == true)
             {
-                Write.WriteLine("UILang = Japanese");
+                Write.WriteLine("Language=Japanese");
             }
             if(UILang_English.IsChecked == true)
             {
-                Write.WriteLine("UILang = English");
+                Write.WriteLine("Language=English");
             }
             if(UILang_ChineseS.IsChecked == true)
             {
-                Write.WriteLine("UILang = S_Chinese");
+                Write.WriteLine("Language=HanS");
             }
             if(UILang_ChineseT.IsChecked == true)
             {
-                Write.WriteLine("UILang = T_Chinese");
+                Write.WriteLine("Language=HanT");
             }
-            Write.WriteLine("[Patch]");
-            if(usebuiltdata.IsChecked == true)
-            {
-                Write.WriteLine("UseBuiltData = 1");
-            }
-            else
-            {
-                Write.WriteLine("UseBuiltData = 0");
-            }
-            Write.WriteLine("UpdateURL = " + UpdateURL.Text);
+            Write.WriteLine("PingDestination=" + MainWindow.PingDestination);
+            Write.WriteLine("PingingTimeSpan=" + MainWindow.TimeSpanSec);
+            Write.WriteLine("UseMetaInjector=" + MainWindow.IsUseMetaInjector.ToString());
+            
+            Write.WriteLine("PatchStreamURI=" + UpdateURL.Text);
+            Write.WriteLine("BDONAEU_ClientPath=" + MainWindow.BDONAEU_ClientPath);
+            
             Write.Close();
             Write.Dispose();
             
@@ -188,20 +138,42 @@ namespace bdo_toolbox
 
         private void UILang_Japanese_Clicked(object sender, RoutedEventArgs e)
         {
-           WriteTheSettingsToIni() ;
-           ReadConfigIni();
+           
+            WriteSettings();
+            
+            UILang_English.Content = "英語";
+            UILang_Japanese.Content = "日本語";
+            UILang_ChineseT.Content = "繁体中国語";
+            UILang_ChineseS.Content = "簡体中国語";
+            upd.Content = "パッチサーバーアドレス";
+            UseMetaInjector.Content = "MeraInjectorを用いてパッチを適用する";
+           
         }
 
         private void UILang_English_Clicked(object sender, RoutedEventArgs e)
         {
-           WriteTheSettingsToIni();
-           ReadConfigIni();
+            WriteSettings();
+            
+            UILang_English.Content = "English";
+            UILang_Japanese.Content = "Japanese";
+            UILang_ChineseT.Content = "Traditional Chinese";
+            UILang_ChineseS.Content = "Simplified Chinese";
+            upd.Content = "Patch Server Address";
+            UseMetaInjector.Content = "Use MetaInjector for Patch";
+
         }
 
         private void UILang_ChineseS_Clicked(object sender, RoutedEventArgs e)
         {
-           WriteTheSettingsToIni();
-            ReadConfigIni();
+            WriteSettings();
+            
+            UILang_English.Content = "英语";
+            UILang_Japanese.Content = "日语";
+            UILang_ChineseS.Content = "简体中文";
+            UILang_ChineseT.Content = "繁体中文";
+            upd.Content = "补丁服务器地址";
+            UseMetaInjector.Content = "使用MetaInjector";
+
         }
         private void Window_KeyAssign(object sender, KeyEventArgs e)
         {
@@ -217,30 +189,30 @@ namespace bdo_toolbox
                 case Key.F7:
                 case Key.F8:
                 case Key.A:
-                    WriteTheSettingsToIni();
+                    WriteSettings();
                     this.Close();
                     break;
                 case Key.C:
                     break;
                 case Key.S:
                     UILang_ChineseS.IsChecked = true;
-                    WriteTheSettingsToIni();
-                    ReadConfigIni();
+                    WriteSettings();
+                    Main.UIUpdate();
                     break;
                 case Key.T:
                     UILang_ChineseT.IsChecked = true;
-                    WriteTheSettingsToIni();
-                    ReadConfigIni();
+                    WriteSettings();
+                    Main.UIUpdate();
                     break;
                 case Key.J:
                     UILang_Japanese.IsChecked = true;
-                    WriteTheSettingsToIni();
-                    ReadConfigIni();
+                    WriteSettings();
+                    Main.UIUpdate();
                     break;
                 case Key.E:
                     UILang_English.IsChecked = true;
-                    WriteTheSettingsToIni();
-                    ReadConfigIni();
+                    WriteSettings();
+                    Main.UIUpdate();
                     break;
                 case Key.F11:
                 case Key.F12:
@@ -254,6 +226,22 @@ namespace bdo_toolbox
                     break;
             }
 
+        }
+
+        private void UILang_ChineseT_Checked(object sender, RoutedEventArgs e)
+        {
+            WriteSettings();
+            UILang_English.Content = "英語";
+            UILang_Japanese.Content = "日語";
+            UILang_ChineseS.Content = "簡體中文";
+            UILang_ChineseT.Content = "繁體中文";
+            upd.Content = "補丁服務器地址";
+            UseMetaInjector.Content = "使用MetaInjector";
+        }
+
+        private void UseMetaInjector_Checked(object sender, RoutedEventArgs e)
+        {
+            MainWindow.IsUseMetaInjector = true;
         }
     }
 }

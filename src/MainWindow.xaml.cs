@@ -1,6 +1,4 @@
 ﻿using BlackDesert.SharedLibs;
-using BlackDesert_Patcher.Properties;
-using BlackDesert_Patcher;
 using Ionic.Zip;
 using Microsoft.Win32;
 using System;
@@ -32,57 +30,26 @@ namespace bdo_toolbox
         static string BDOToolBoxBaseDir = Environment.GetCommandLineArgs()[0];
         public static string BDOToolBoxDirFullPath = System.IO.Path.GetFullPath(BDOToolBoxBaseDir);
         public static string BDOToolBoxStartupPath = System.IO.Path.GetDirectoryName(BDOToolBoxDirFullPath);
+        public static string BDONAEU_ClientPath = "test";
+        public static string PatchStreamURI = "http://files.indigoflare.net/bdotoolbox/patch/";
+        public static bool IsUseMetaInjector;
+        private string ConfigureFileName = "config.ini";
         bool builtflag;
-       
+        public string Destination = "NA-Sanjose";
+        public static int TimeSpanSec = 1;
         string return_value;
-        public string Language = null;
+        public static string Language;
         //private ObservableCollection<MainWindow.Language> languages = new ObservableCollection<MainWindow.Language>();
-        public string PingDestination ="";
-        private IWebProxy proxySetting;
+        public static string PingDestination;
+        
+
         bool flg = true;
-        private IContainer components;
-        private ListBox languageList;
+        
         public MainWindow()
         {
             InitializeComponent();
-            // ConfigWatchDog.Filter = "config.ini";
-            // ConfigWatchDog.Path = "/";
-            //ConfigWatchDog.IncludeSubdirectories = false;
-            //WaitForChangedResult WatchDog = ConfigWatchDog.WaitForChanged(WatcherChangeTypes.Changed);
-            //if (WatchDog.TimedOut)
-            // {
-            //     return;
-            // }
-            // switch (WatchDog.ChangeType)
-            //{
-            //     case WatcherChangeTypes.Changed:
-            //        ReadIni();
-            //       break;
-            // }
-            //this.Dispatcher.BeginInvoke(new Action(() =>
-           // {
-                
-                
-
-
-                    //イベントハンドラの削除
-                    
-               // }
-               // finally
-               // {
-                 //   if (ConfigWatchDog != null)
-                 //   {
-                    //後始末
-                    //ConfigWatchDog.Changed -= watcher_Changed;
-                    //ConfigWatchDog.Dispose();
-                       // ConfigWatchDog = null;
-                  //  }
-                //}
-        //
-            //UIスレッドで実行すべき処
-       //}));
-           
             
+            //UIUpdate();
             Activated += (s, e) =>
             {
                 if (flg)
@@ -90,171 +57,174 @@ namespace bdo_toolbox
                     string test = this.officialVersion();
                     //MessageBox.Show(test);
                     flg = false;
-                    ReadIni();
+                    
+                    Configure.LoadConfigure(ConfigureFileName);
+                    Language = GetConfigureContent("Language");
+                    PingDestination = GetConfigureContent("PingDestination");
+                    TimeSpanSec = int.Parse(GetConfigureContent("PingingTimeSpan"));
+                    BDONAEU_ClientPath = GetConfigureContent("BDONAEU_ClientPath");
+                    IsUseMetaInjector = bool.Parse(GetConfigureContent("UseMetaInjector"));
+                    UIUpdate();
                     updatePatchInfo();
+                    //debug
+                    //MessageBox.Show(GetConfigureContent("Language"));                   
                 }
             };
+            //Debug
+            
         }
         void config_Closing(object sender, CancelEventArgs e)
         {
-            ReadIni();
+            UIUpdate();
         }
        
-        public void ReadIni()
+        public void UIUpdate()
         {
-            this.Dispatcher.BeginInvoke(new Action(() =>
+            Configure.LoadConfigure(ConfigureFileName);
+            Language = GetConfigureContent("Language");
+            PingDestination = GetConfigureContent("PingDestination");
+            TimeSpanSec = int.Parse(GetConfigureContent("PingingTimeSpan"));
+            IsUseMetaInjector = bool.Parse(GetConfigureContent("UseMetaInjector"));
+            this.Dispatcher.BeginInvoke(new Action(() => //直接UIを更新できないのでDisPatcher経由で更新
             {
-                StreamReader SettingRead = new StreamReader(new FileStream("config.ini", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-                string stresult = string.Empty;
-
-                var ReadLineCount = 0;
-                string sttemp = string.Empty;
-                bdo_toolbox.config conf = new config();
-                while (SettingRead.Peek() >= 0)
+                
+                switch (Language)
                 {
-                    // ファイルを 1 行ずつ読み込む
-                    string stBuffer = SettingRead.ReadLine();
-                    if (stBuffer.Contains("UILang = Japanese"))
-                    {
-                       
+                    case "Japanese":
+                        
                         lang_en.Content = "英語";
                         lang_ja.Content = "日本語";
-                        lang_scn.Content = "中国語(簡体)";
-                        lang_tcn.Content = "中国語(繁体α）";
-                        lang_ru.Content = "ロシア語";
+                        lang_scn.Content = "中国語（簡体）";
+                        lang_tcn.Content = "中国語（繁体）";
                         targersrv_kr.Content = "韓国";
-                        targetsrv_eu.Content = "北米/欧州";
                         targetsrv_jp.Content = "日本";
-                        targetsrv_ru.Content = "ロシア";
+                        targetsrv_tw.Content = "台灣";
+                        targetsrv_eu.Content = "欧米";
                         Install.Content = "パッチインストール";
                         Uninstall.Content = "パッチアンインストール";
-                        RoutingAssigner.Content = "ルーティングアサイナ";
                         Ping_Show.Content = "Ping表示";
-                        Language = "Japanese";
-                    }
-                    if (stBuffer.Contains("UILang = English"))
-                    {
-                        
-                        Language = "English";
-                        
+                        DefineUIContent.UILang_English = "英語";
+                        DefineUIContent.UILang_Japanese = "日本語";
+                        DefineUIContent.UILang_HanS = "簡体中国語";
+                        DefineUIContent.UILang_HanT = "繁体中国語";
+                        DefineUIContent.UIPatchUseMetaInjector = "MetaInjectorを用いてパッチを適用する";
+                        DefineUIContent.UIPatchServer = "パッチサーバーアドレス";
+                        break;
+                    case "English":
                         lang_en.Content = "English";
                         lang_ja.Content = "Japanese";
-                        lang_scn.Content = "Chinese(simplified)";
-                        lang_tcn.Content = "Chinese(traditional α)";
-                        lang_ru.Content = "Russian";
+                        lang_scn.Content = "Simplified Chinese";
+                        lang_tcn.Content = "Traditional Chinese";
                         targersrv_kr.Content = "Korea";
-                        targetsrv_eu.Content = "EU/NA";
                         targetsrv_jp.Content = "Japan";
-                        targetsrv_ru.Content = "Russia";
+                        targetsrv_tw.Content = "Taiwan";
+                        targetsrv_eu.Content = "EU/NA";
                         Install.Content = "Install Patch";
                         Uninstall.Content = "Uninstall Patch";
-                        RoutingAssigner.Content = "Routing Assigner";
                         Ping_Show.Content = "Show Ping";
-                        
-                    }
-                    if (stBuffer.Contains("UILang = T_Chinese"))
-                    {
-                        
-                        Language = "T_Chinese";
+                        DefineUIContent.UILang_English = "English";
+                        DefineUIContent.UILang_Japanese = "Japanese";
+                        DefineUIContent.UILang_HanS = "Simplified Chinese";
+                        DefineUIContent.UILang_HanT = "Traditional Chinese";
+                        DefineUIContent.UIPatchUseMetaInjector = "Use MetaInjector for Patch";
+                        DefineUIContent.UIPatchServer = "Patch Server Address";
+                        break;
+                    case "HanT":
                         
                         lang_en.Content = "英語";
-                        lang_ja.Content = "日本語";
+                        lang_ja.Content = "日語";
                         lang_scn.Content = "簡體中文";
-                        lang_tcn.Content = "繁體中文(α)";
-                        lang_ru.Content = "俄語";
+                        lang_tcn.Content = "繁體中文";
                         targersrv_kr.Content = "韓服";
-                        targetsrv_eu.Content = "欧美服";
                         targetsrv_jp.Content = "日服";
-                        targetsrv_ru.Content = "俄服";
+                        targetsrv_tw.Content = "台服";
+                        targetsrv_eu.Content = "欧美服";
                         Install.Content = "安裝補丁";
                         Uninstall.Content = "卸載補丁";
-                        RoutingAssigner.Content = "路由分配器";
                         Ping_Show.Content = "顯示Ping";
-                        
-                    }
-                    if (stBuffer.Contains("UILang = S_Chinese"))
-                    {
-                        
-                        Language = "S_Chinese";
-                        
+                        DefineUIContent.UILang_English = "英語";
+                        DefineUIContent.UILang_Japanese = "日語";
+                        DefineUIContent.UILang_HanS = "簡體中文";
+                        DefineUIContent.UILang_HanT = "繁體中文";
+                        DefineUIContent.UIPatchUseMetaInjector = "使用MetaInjector";
+                        DefineUIContent.UIPatchServer = "補丁服務器地址";
+
+                        break;
+                    case "HanS":
                         lang_en.Content = "英语";
                         lang_ja.Content = "日语";
                         lang_scn.Content = "简体中文";
-                        lang_tcn.Content = "繁体中文(α)";
-                        lang_ru.Content = "俄语";
+                        lang_tcn.Content = "繁体中文";
                         targersrv_kr.Content = "韩服";
-                        targetsrv_eu.Content = "欧美服";
                         targetsrv_jp.Content = "日服";
-                        targetsrv_ru.Content = "俄服";
+                        targetsrv_tw.Content = "台服";
+                        targetsrv_eu.Content = "欧美服";
                         Install.Content = "安装补丁";
                         Uninstall.Content = "卸载补丁";
-                        RoutingAssigner.Content = "路由分配器";
                         Ping_Show.Content = "显示Ping";
-                        
-                    }
-                    if (stBuffer.Contains("UseBuiltData = 1"))
-                    {
-                        builtflag = true;
-                    }
+                        DefineUIContent.UILang_English = "英语";
+                        DefineUIContent.UILang_Japanese = "日语";
+                        DefineUIContent.UILang_HanS = "简体中文";
+                        DefineUIContent.UILang_HanT = "繁体中文";
+                        DefineUIContent.UIPatchUseMetaInjector = "使用MetaInjector";
+                        DefineUIContent.UIPatchServer = "补丁服务器地址";
+                        break;
+                }
+            }));
+
+        }
+        private string GetConfigureContent(string Key)　//設定ファイルからロードしListに格納したデータを取り出し
+        {
+            string return_value = "";
+            for (int i = 0; i < Configure.ConfigureTable.Count; i++) //設定格納List内を検索
+            {
+                string preload = Configure.ConfigureTable[i].Key; 
+                
+                
+                if (String.Equals(Key,preload)) //検索対象と検索結果が一致したら
+                {
+                    
+                    return_value = Configure.ConfigureTable[i].Content;
+                   // MessageBox.Show("loaded. " + return_value);
 
                 }
-                SettingRead.Close();
-                SettingRead.Dispose();
-                SettingRead = null;
-            }));
-    
+
+            }
+            return return_value; //一致した検索結果を返す
 
         }
         private void applyBtn_Click(object sender, EventArgs e)
         {
-            ReadIni();
-            string text = this.gameInstallPath();
-            bool flag = Directory.Exists(text);
-            bdo_toolbox.config conf = new bdo_toolbox.config();
+            UIUpdate();
+            string InstallPath = this.gameInstallPath();
+            bool PathIsValid = Directory.Exists(InstallPath);
+            
 
-            if (flag)
+            if (PathIsValid)
             {
-                bool flag2 = Directory.Exists(text + "\\stringtable");
-                if (flag2)
+                bool IsThereStringtable = Directory.Exists(InstallPath + "\\stringtable");
+                if (IsThereStringtable)
                 {
                     try
                     {
-                        Directory.Delete(text + "\\stringtable", true);
+                        Directory.Delete(InstallPath + "\\stringtable", true);
                     }
                     catch
                     {
                     }
                 }
-                bool flag3 = !Directory.Exists(text + "\\prestringtable");
-                if (flag3)
+                bool IsTherePrestringtable = !Directory.Exists(InstallPath + "\\prestringtable");
+                if (IsTherePrestringtable)
                 {
-                    Directory.CreateDirectory(text + "\\prestringtable");
+                    Directory.CreateDirectory(InstallPath + "\\prestringtable");
                 }
-                bool flag4 = !Directory.Exists(text + "\\prestringtable\\eu");
+                bool flag4 = !Directory.Exists(InstallPath + "\\prestringtable\\tw");
                 if (flag4)
                 {
-                    Directory.CreateDirectory(text + "\\prestringtable\\eu");
+                    Directory.CreateDirectory(InstallPath + "\\prestringtable\\tw");
                 }
-                //bool flag5 = this.officialVersion().Equals(this.localVersion());
-                //if (flag5)
-                //{
-                
-                if(builtflag == true)
-                {
-                    
-                    this.startPatchingNoBuild(text);
-                }
-                else
-                {
-                    this.startPatchingNoBuild(text);
-                }
-                
-
-                //}
-                //else
-                //{
-                //	int num = (int)MessageBox.Show("Proszę zaktualizować grę przed próbą generowania patcha.");
-                //}
+                this.startPatching(InstallPath);
+               
             }
             else
             {
@@ -264,16 +234,25 @@ namespace bdo_toolbox
         // here you got pup op dialgos with errors
         private void deleteBtn_Click(object sender, EventArgs e)
         {
-            string text = this.gameInstallPath();
-            bool flag = text != "" && Directory.Exists(text);
+            string folder = this.gameInstallPath();
+            bool flag = folder != "" && Directory.Exists(folder);
             if (flag)
             {
-                bool flag2 = Directory.Exists(text + "\\prestringtable");
+                bool flag2 = Directory.Exists(folder + "\\prestringtable");
                 if (flag2)
                 {
                     try
                     {
-                        Directory.Delete(text + "\\prestringtable", true);
+                        Directory.Delete(folder + "\\prestringtable", true);
+                        if(targetsrv_eu.IsChecked == true && lang_ja.IsChecked == true)
+                        {
+                            File.Delete("PatchInstalled.bdotoolbox");
+                            File.Copy("data/backup/pad00000.meta", folder + "paz/pad00000.meta", true);
+                            File.Copy("data/backup/PAD03254.PAZ", folder + "paz/PAD03254.PAZ", true);
+                            File.Copy("data/backup/PAD03256.PAZ", folder + "paz/PAD03256.PAZ", true);
+                            File.Copy("data/backup/PAD03307.PAZ", folder + "paz/PAD03307.PAZ", true);
+                        }
+                        
                     }
                     catch (Exception ex)
                     {
@@ -295,13 +274,41 @@ namespace bdo_toolbox
                 //int num4 = (int)System.Windows.MessageBox.Show("");
             }
         }
-        private void RepaitClient_Click(object sender,EventArgs e)
+        private void RepairClient_Click(object sender,EventArgs e)
         {
+            MessageBox.Show(gameInstallPath());
         }
-        private void startPatchingNoBuild(string folder)
+        private void startPatching(string folder)
         {
             
-            WebClient webclient = new WebClient();
+            if(targetsrv_tw.IsChecked == true && lang_ja.IsChecked == true)
+            {
+                var InstallPath = gameInstallPath();
+                try
+                {
+                    PatchProcess.JPForTaiwan(InstallPath);
+                }
+                catch
+                {
+                    ResetPatch();
+                    PatchProcess.JPForTaiwan(InstallPath);
+                }
+                
+                FinishedPatching_Message();
+            }
+            if(targetsrv_tw.IsChecked == true && lang_en.IsChecked == true)
+            {
+                var InstallPath = gameInstallPath();
+                try
+                {
+                    PatchProcess.ENForTaiwan(InstallPath);
+                }
+                catch
+                {
+                    ResetPatch();
+                    PatchProcess.ENForTaiwan(InstallPath);
+                }
+            }
             if (targetsrv_jp.IsChecked == true)
             {
                 
@@ -309,32 +316,7 @@ namespace bdo_toolbox
             // Target Server: Japan | Target Language: English
             if (targetsrv_jp.IsChecked == true && lang_en.IsChecked == true)
             {
-                webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/LD_JP_EN.zip", "data/LD_JP_EN.zip");
-                try
-                {
-                    ZipFile zipFile = ZipFile.Read("data/LD_JP_EN.zip");
-                    zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile.Dispose();
-                    zipFile = null;
-                }
-                catch
-                {
-                    ResetPatch();
-                    ZipFile zipFile = ZipFile.Read("data/LD_JP_EN.zip");
-                    zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile.Dispose();
-                    zipFile = null;
-
-                }
-                FinishedPatching_Message();
-                webclient.Dispose();
-                webclient = null;
+                
             }
             
             if (targetsrv_jp.IsChecked == true && lang_scn.IsChecked == true)
@@ -349,252 +331,127 @@ namespace bdo_toolbox
                 UnAvailable_Message();
             }
             // Target Server: Japan | Target Language: Japanese(Modified)
-            if (targetsrv_jp.IsChecked == true && lang_ja.IsChecked == true)
-            {
+            //if (targetsrv_jp.IsChecked == true && lang_ja.IsChecked == true)
+            //{
                 
-                //webClient.DownloadDataAsync(new Uri(string.Format("http://files.indigoflare.net/bdotoolbox/patch/patch.zip")));
-                webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/LD_JP_EN.zip", "data/LD_JP_EN.zip");
-                try
-                {
-                    ZipFile zipFile = ZipFile.Read("data/LD_JP_EN.zip");
-                    zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile.Dispose();
-                    zipFile = null;
-                }
-                catch
-                {
-                    ResetPatch();
-                    ZipFile zipFile = ZipFile.Read("data/LD_JP_EN.zip");
-                    zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile.Dispose();
-                    zipFile = null;
-                }
-                FinishedPatching_Message();
-                webclient.Dispose();
-                webclient = null;
-            }
+            //    //webClient.DownloadDataAsync(new Uri(string.Format("http://files.indigoflare.net/bdotoolbox/patch/patch.zip")));
+            //    webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/LD_JP_EN.zip", "data/LD_JP_EN.zip");
+            //    try
+            //    {
+            //        ZipFile zipFile = ZipFile.Read("data/LD_JP_EN.zip");
+            //        zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile.Dispose();
+            //        zipFile = null;
+            //    }
+            //    catch
+            //    {
+            //        ResetPatch();
+            //        ZipFile zipFile = ZipFile.Read("data/LD_JP_EN.zip");
+            //        zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile.Dispose();
+            //        zipFile = null;
+            //    }
+            //    FinishedPatching_Message();
+            //    webclient.Dispose();
+            //    webclient = null;
+            //}
            
             
-            // Target Server: Japan | Target Language: Traditional Chinese
-            if (targetsrv_jp.IsChecked == true && lang_tcn.IsChecked == true)
-            {
+            //// Target Server: Japan | Target Language: Traditional Chinese
+            //if (targetsrv_jp.IsChecked == true && lang_tcn.IsChecked == true)
+            //{
 
-                //webClient.DownloadDataAsync(new Uri(string.Format("http://files.indigoflare.net/bdotoolbox/patch/patch.zip")));
-                webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/LD_JP_TCN.zip", "data/LD_JP_TCN.zip");
-                try
-                {
+            //    //webClient.DownloadDataAsync(new Uri(string.Format("http://files.indigoflare.net/bdotoolbox/patch/patch.zip")));
+            //    webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/LD_JP_TCN.zip", "data/LD_JP_TCN.zip");
+            //    try
+            //    {
                     
-                    ZipFile zipFile = ZipFile.Read("data/LD_JP_TCN.zip");
-                    zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile.Dispose();
-                    zipFile = null;
-                }
-                catch
-                {
-                    ResetPatch();
-                    ZipFile zipFile = ZipFile.Read("data/LD_JP_TCN.zip");
-                    zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
-                    zipFile.Dispose();
-                    zipFile = null;
+            //        ZipFile zipFile = ZipFile.Read("data/LD_JP_TCN.zip");
+            //        zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile.Dispose();
+            //        zipFile = null;
+            //    }
+            //    catch
+            //    {
+            //        ResetPatch();
+            //        ZipFile zipFile = ZipFile.Read("data/LD_JP_TCN.zip");
+            //        zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/jp/");
+            //        zipFile.Dispose();
+            //        zipFile = null;
 
-                }
-                FinishedPatching_Message();
-                webclient.Dispose();
-                webclient = null;
-            }
-            // Targer Server: EU/NA | Target Language: Japanese
-            if (targetsrv_eu.IsChecked == true && lang_ja.IsChecked == true)
-            {
+            //    }
+            //    FinishedPatching_Message();
+            //    webclient.Dispose();
+            //    webclient = null;
+            //}
+            //// Targer Server: EU/NA | Target Language: Japanese
+            //if (targetsrv_eu.IsChecked == true && lang_ja.IsChecked == true)
+            //{
 
-                //webClient.DownloadDataAsync(new Uri(string.Format("http://files.indigoflare.net/bdotoolbox/patch/patch.zip")));
-                webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/LD_EN_JP.zip", "data/LD_EN_JP.zip");
-                webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/paz_mod.zip","data/paz_mod.zip");
-                try
-                {
-                    //Original PAZ Backup for recover the client state, won't do it if patch already installed. for protect the original PAZ.
-                    if (!File.Exists(folder + "PatchInstalled.bdotoolbox"))
-                    {
-                        File.Copy(folder + "paz/pad00000.meta", "data/backup/pad00000.meta");
-                        File.Copy(folder + "paz/PAD03254.PAZ", "data/backup/PAD03254.PAZ");
-                        File.Copy(folder + "paz/PAD03256.PAZ", "data/backup/PAD03256.PAZ");
-                        File.Copy(folder + "paz/PAD03307.PAZ", "data/backup/PAD03307.PAZ");
-                    }
-                    ZipFile zipFile = ZipFile.Read("data/LD_EN_JP.zip");
-                    ZipFile zip_pazmod = ZipFile.Read("data/paz_mod.zip");
-                    zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/en/");
-                    zipFile["stringtable_cutscene_en.xlsm"].Extract(folder + "prestringtable/en/");
-                    zipFile["stringtable_en.xlsm"].Extract(folder + "prestringtable/en/");
-                    zipFile["symbolnostringtable_en.xlsm"].Extract(folder + "prestringtable/en/");
-                    zipFile.Dispose();
-                    zip_pazmod.ExtractAll(folder + "paz",ExtractExistingFileAction.OverwriteSilently);
-                    zip_pazmod.Dispose();
-                    File.Create(folder + "PatchInstalled.bdotoolbox");
-                    zip_pazmod = null;
-                    zipFile = null;
+            //    //webClient.DownloadDataAsync(new Uri(string.Format("http://files.indigoflare.net/bdotoolbox/patch/patch.zip")));
+            //    webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/LD_EN_JP.zip", "data/LD_EN_JP.zip");
+            //    webclient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/paz_mod.zip","data/paz_mod.zip");
+            //    try
+            //    {
+            //        //Original PAZ Backup for recover the client state, won't do it if patch already installed. for protect the original PAZ.
+            //        if (!File.Exists(folder + "PatchInstalled.bdotoolbox"))
+            //        {
+            //            File.Copy(folder + "paz/pad00000.meta", "data/backup/pad00000.meta");
+            //            File.Copy(folder + "paz/PAD03254.PAZ", "data/backup/PAD03254.PAZ");
+            //            File.Copy(folder + "paz/PAD03256.PAZ", "data/backup/PAD03256.PAZ");
+            //            File.Copy(folder + "paz/PAD03307.PAZ", "data/backup/PAD03307.PAZ");
+            //        }
+            //        ZipFile zipFile = ZipFile.Read("data/LD_EN_JP.zip");
+            //        ZipFile zip_pazmod = ZipFile.Read("data/paz_mod.zip");
+            //        zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/en/");
+            //        zipFile["stringtable_cutscene_en.xlsm"].Extract(folder + "prestringtable/en/");
+            //        zipFile["stringtable_en.xlsm"].Extract(folder + "prestringtable/en/");
+            //        zipFile["symbolnostringtable_en.xlsm"].Extract(folder + "prestringtable/en/");
+            //        zipFile.Dispose();
+            //        zip_pazmod.ExtractAll(folder + "paz",ExtractExistingFileAction.OverwriteSilently);
+            //        zip_pazmod.Dispose();
+            //        File.Create(folder + "PatchInstalled.bdotoolbox");
+            //        zip_pazmod = null;
+            //        zipFile = null;
                     
-                }
-                catch
-                {
-                    ResetPatch();
-                    ZipFile zipFile = ZipFile.Read("data/LD_EN_JP.zip");
-                    ZipFile zip_pazmod = ZipFile.Read("data/paz_mod.zip");
-                    zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/en/");
-                    zipFile["stringtable_cutscene_jp.xlsm"].Extract(folder + "prestringtable/en/");
-                    zipFile["stringtable_jp.xlsm"].Extract(folder + "prestringtable/en/");
-                    zipFile["symbolnostringtable_jp.xlsm"].Extract(folder + "prestringtable/en/");
-                    zipFile.Dispose();
-                    zipFile = null;
-                    zip_pazmod.ExtractAll(folder + "paz", ExtractExistingFileAction.OverwriteSilently);
-                    zip_pazmod.Dispose();
-                    zip_pazmod = null;
+            //    }
+            //    catch
+            //    {
+            //        ResetPatch();
+            //        ZipFile zipFile = ZipFile.Read("data/LD_EN_JP.zip");
+            //        ZipFile zip_pazmod = ZipFile.Read("data/paz_mod.zip");
+            //        zipFile["LanguageData.xlsm"].Extract(folder + "prestringtable/en/");
+            //        zipFile["stringtable_cutscene_en.xlsm"].Extract(folder + "prestringtable/en/");
+            //        zipFile["stringtable_en.xlsm"].Extract(folder + "prestringtable/en/");
+            //        zipFile["symbolnostringtable_en.xlsm"].Extract(folder + "prestringtable/en/");
+            //        zipFile.Dispose();
+            //        zipFile = null;
+            //        zip_pazmod.ExtractAll(folder + "paz", ExtractExistingFileAction.OverwriteSilently);
+            //        zip_pazmod.Dispose();
+            //        zip_pazmod = null;
 
-                }
-                FinishedPatching_Message();
-                webclient.Dispose();
-                webclient = null;
-            }
+            //    }
+            //    FinishedPatching_Message();
+            //    webclient.Dispose();
+            //    webclient = null;
+            //}
             //end
 
 
         }
-        private void startPatching(string folder)
-        {
-            if(targetsrv_jp.IsChecked == true)
-            {
-                
-            }
-            if(targetsrv_eu.IsChecked == true)
-            {
-                
-            }
-            bool flag = this.checkReadOnly(folder);
-            if (!flag)
-            {
-                MemoryStream xlsmTraslations = new MemoryStream();
-                MemoryStream languagedataTranslations = new MemoryStream();
-                //try
-                //{
-                    
-                    //download.Text = string.Format("Downloading {0} Patch", ((MainWindow.Language)this.languageList.SelectedValue).Display);
-                    WebClient webClient = new WebClient();
-                    webClient.Proxy = this.proxySetting;
-                    webClient.DownloadProgressChanged += delegate (object sender, DownloadProgressChangedEventArgs e)
-                    {
-                       // download.progressBarForm.Value = int.Parse(Math.Truncate(double.Parse(e.BytesReceived.ToString()) / double.Parse(e.TotalBytesToReceive.ToString()) * 100.0).ToString());
-                    };
-                    webClient.DownloadDataCompleted += delegate (object sender, DownloadDataCompletedEventArgs e)
-                    {
-                        //ZipFile zipFile = ZipFile.Read(new MemoryStream(e.Result));
-                        //zipFile["excel.txt"].Extract(xlsmTraslations);
-                       // zipFile["bexcel.txt"].Extract(languagedataTranslations);
-                    };
-                    // Here you got localisation of getzip.php 
-                    if(targetsrv_jp.IsChecked == true)
-                    {
-                        
-                        //webClient.DownloadDataAsync(new Uri(string.Format("http://files.indigoflare.net/bdotoolbox/patch/patch.zip")));
-                        webClient.DownloadFile("http://files.indigoflare.net/bdotoolbox/patch/patch.zip", "data/patch.zip");
-                        
-                    }
-                    ZipFile zipFile = ZipFile.Read("data/patch.zip");
-                    zipFile["excel.txt"].Extract(xlsmTraslations);
-                    zipFile["bexcel.txt"].Extract(languagedataTranslations);
-                    // int num = (int)download.ShowDialog(this);
-               // }
-               // catch
-                //{
-                   // int num2 = (int)System.Windows.MessageBox.Show("翻訳データのダウンロードに失敗しました。再試行してください。");
-                    //return;
-                //}
-                bool flag2 = File.Exists(folder + "override.txt");
-                
-                if (flag2)
-                {
-                    languagedataTranslations = new MemoryStream(File.ReadAllBytes(folder + "override.txt"));
-                }
-                bool flag3 = !File.Exists(folder + "paz\\pad00000.meta");
-                if (flag3)
-                {
-                    int num3 = (int)System.Windows.MessageBox.Show(string.Format("pad00000.metaが見つかりませんでした。正しくインストールされているかご確認ください。", folder));
-                }
-                else
-                {
-                    
-                    PazMeta pazMeta = PazMeta.Read(folder + "paz\\pad00000.meta", new PazMeta.Crypt(0));
-                    byte[] buffer = pazMeta.SaveFile(pazMeta.PazFiles[folder+"stringtable/jp/stringtable_jp.xlsm"]);
-                    byte[] buffer2 = pazMeta.SaveFile(pazMeta.PazFiles[folder+"stringtable/jp/stringtable_cutscene_jp.xlsm"]);
-                    byte[] buffer3 = pazMeta.SaveFile(pazMeta.PazFiles[folder+"stringtable/jp/symbolnostringtable_jp.xlsm"]);
-                    byte[] buffer4 = pazMeta.SaveFile(pazMeta.PazFiles[folder+"gamecommondata/datasheets.bexcel"]);
-                    Util util = new Util();
-                    List<string> list = Encoding.UTF8.GetString(xlsmTraslations.ToArray()).Replace("\r", "").Split(new char[]
-                    {
-                        '\n'
-                    }).ToList<string>();
-                    Dictionary<string, Util.translation> dictionary = new Dictionary<string, Util.translation>();
-                    foreach (string current in list)
-                    {
-                        char[] separator = new char[]
-                        {
-                            '\t'
-                        };
-                        string[] array = current.Split(separator);
-                        bool flag4 = array.Count<string>() == 3 && !string.IsNullOrWhiteSpace(array[1]) && !string.IsNullOrWhiteSpace(array[2]) && !dictionary.ContainsKey(array[0]);
-                        if (flag4)
-                        {
-                            dictionary.Add(array[0], new Util.translation(array[1], array[2]));
-                        }
-                    }
-                    MemoryStream memoryStream = util.TranslateFile(new MemoryStream(buffer), dictionary, FileTypes.stringTable);
-                    File.WriteAllBytes(string.Format("{0}\\prestringtable\\en\\{1}", folder, "stringtable_en.xlsm"), memoryStream.ToArray());
-                    memoryStream.Close();
-                    MemoryStream memoryStream2 = util.TranslateFile(new MemoryStream(buffer2), dictionary, FileTypes.cutScene);
-                    File.WriteAllBytes(string.Format("{0}\\prestringtable\\eu\\{1}", folder, "stringtable_cutscene_eu.xlsm"), memoryStream2.ToArray());
-                    memoryStream2.Close();
-                    MemoryStream memoryStream3 = util.TranslateFile(new MemoryStream(buffer3), dictionary, FileTypes.symbolTable);
-                    File.WriteAllBytes(string.Format("{0}\\prestringtable\\eu\\{1}", folder, "symbolnostringtable_eu.xlsm"), memoryStream3.ToArray());
-                    memoryStream3.Close();
-                    MemoryStream memoryStream4 = new MemoryStream(buffer4);
-                    MemoryStream memoryStream5 = new MemoryStream();
-                    Dictionary<string, string> dictionary2 = new Dictionary<string, string>();
-                    string text = Encoding.UTF8.GetString(languagedataTranslations.ToArray()).Replace("\r", "");
-                    char[] separator2 = new char[]
-                    {
-                        '\n'
-                    };
-                    string[] array2 = text.Split(separator2);
-                    for (int i = 0; i < array2.Length; i++)
-                    {
-                        string text2 = array2[i];
-                        string[] array3 = text2.Replace("@:@", "\t").Split(new char[]
-                        {
-                            '\t'
-                        });
-                        bool flag5 = array3.Count<string>() == 2 && !string.IsNullOrWhiteSpace(array3[1]) && !dictionary2.ContainsKey(array3[0]);
-                        if (flag5)
-                        {
-                            dictionary2.Add(array3[0], array3[1]);
-                        }
-                    }
-                    new newLanguageData().MakeFile(dictionary2, memoryStream4, memoryStream5);
-                    File.WriteAllBytes(string.Format("{0}\\prestringtable\\en\\{1}", folder, "LanguageData.xlsm"), memoryStream5.ToArray());
-                    memoryStream4.Close();
-                    memoryStream5.Close();
-                    int num4 = (int)System.Windows.MessageBox.Show("Pomyślnie utworzone pliki");
-                }
-            }
-        }
+        
         
         private bool checkReadOnly(string folder)
         {
@@ -730,6 +587,7 @@ namespace bdo_toolbox
             string KeyNameJP = string.Format("HKEY_CURRENT_USER\\SOFTWARE\\GameOn\\Pmang\\BlackDesert_live", Wow.Is64BitOperatingSystem ? "Wow6432Node\\" : "");
             //string keyNameNAEU = string.Format("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{C1F96C92-7B8C-485F-A9CD-37A0708A2A60}", Wow.Is64BitOperatingSystem ? "Wow6432Node\\" : "");
             string keyNameKR = string.Format("HKEY_CURRENT_USER\\SOFTWARE\\DaumGames\\black", Wow.Is64BitOperatingSystem ? "Wow6432Node\\" : "");
+            string keyNameTW = string.Format("HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\BlackDesert");
             if (targetsrv_jp.IsChecked == true)
             {
                 TargetSrv = (string)Registry.GetValue(KeyNameJP, "location", "");
@@ -737,6 +595,11 @@ namespace bdo_toolbox
             if (targetsrv_eu.IsChecked == true)
             {
                 //TargetSrv = (string)Registry.GetValue(keyNameNAEU, "InstallLocation", "");
+                TargetSrv = BDONAEU_ClientPath;
+            }
+            if(targetsrv_tw.IsChecked == true)
+            {
+                TargetSrv = (string)Registry.GetValue(keyNameTW, "path", "");
             }
             return TargetSrv;
             
@@ -745,16 +608,7 @@ namespace bdo_toolbox
         private DateTime getFileTime()
         {
             string text = "";
-            try
-            {
-                text = new WebClient
-                {
-                    Proxy = this.proxySetting
-                }.DownloadString("http://files.indigoflare.net/BDOToolBox/system/FileDataTime.php?language="); //+ ((MainWindow.Language)this.languageList.SelectedValue).Value.ToLower()).Replace("\r", "").Replace("\n", "");
-            }
-            catch
-            {
-            }
+            
             bool flag = !string.IsNullOrWhiteSpace(text);
             DateTime result;
             if (flag)
@@ -768,20 +622,7 @@ namespace bdo_toolbox
             return result;
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            int num = (int)System.Windows.MessageBox.Show("This patcher was developed by LokiReborn and is to be distributed freely. If you were charged for this ask for a refund, you got ripped off.\r\nAdditionally I'd like to thank Seraphy & Billy for helping me out with my translations from the start and to Xennma along with everyone else helping out with the public translations.", "About Us");
-        }
-
-        //protected override void Dispose(bool disposing)
-        //{
-          //  bool flag = disposing && this.components != null;
-           // if (flag)
-            //{
-             //   this.components.Dispose();
-            //}
-            //base.Dispose(disposing);
-        //}
+        
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
@@ -810,7 +651,7 @@ namespace bdo_toolbox
 
         private void PingShow_Click(object sender, RoutedEventArgs e)
         {
-            ReadIni();
+            UIUpdate();
             Ping Ping = new Ping();
             Ping.Show();
         }
@@ -829,6 +670,24 @@ namespace bdo_toolbox
                     break;
                 case "S_Chinese":
                     MessageBox.Show("这个功能是现在无法使用。", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+            }
+        }
+        public void PingingTimeSpan_NotAllowed()
+        {
+            switch (Language)
+            {
+                case "Japanese":
+                    MessageBox.Show("各国サービスの認証サーバを利用しPing計測を行っている場合、サーバー負荷への配慮のため3秒以下へのPing間隔の設定は出来ません。3秒へと自動的に変更されます。", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+                case "English":
+                    MessageBox.Show("When using an each services auth server for pinging, doesn't allow less than 3 sec pinging interval for Consideration of server load. Pinging interval will be changed to 3 sec automatically.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+                case "T_Chinese":
+                    MessageBox.Show("When using an each services auth server for pinging, doesn't allow less than 3 sec pinging interval for Consideration of server load. Pinging interval will be changed to 3 sec automatically.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+                case "S_Chinese":
+                    MessageBox.Show("When using an each services auth server for pinging, doesn't allow less than 3 sec pinging interval for Consideration of server load. Pinging interval will be changed to 3 sec automatically.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                     break;
             }
         }
@@ -1034,10 +893,10 @@ namespace bdo_toolbox
 
         private void targetsrv_jp_Checked(object sender, RoutedEventArgs e)
         {
-            
-        }
 
-        private void lang_en_Checked(object sender, RoutedEventArgs e)
+        }
+        
+    private void lang_en_Checked(object sender, RoutedEventArgs e)
         {
             WebClient Download = new WebClient();
             string result;
@@ -1076,17 +935,17 @@ Action(() =>
     switch (e.ChangeType)
     {
         case System.IO.WatcherChangeTypes.Changed:
-            ReadIni();
+            UIUpdate();
            // ConfigWatchDog.Dispose();
            // ConfigWatchDog = null;
             break;
         case System.IO.WatcherChangeTypes.Created:
-            ReadIni();
+            UIUpdate();
            // ConfigWatchDog.Dispose();
            // ConfigWatchDog = null;
             break;
         case System.IO.WatcherChangeTypes.Deleted:
-            ReadIni();
+            UIUpdate();
           //  ConfigWatchDog.Dispose();
            // ConfigWatchDog = null;
             break;
@@ -1184,19 +1043,23 @@ Action(() =>
 
         private void lang_ja_Checked(object sender, RoutedEventArgs e)
         {
-            
-
-            try {
-                WebClient Download = new WebClient();
-                string result;
-                return_value = Download.DownloadString("http://files.indigoflare.net/BDOToolBox/system/patchinfo.jp");
-                this.PatchInfo.Content = return_value;
-            }
-            catch
+            if (targetsrv_eu.IsChecked == true)
             {
-                
-                this.PatchInfo.Content = FailedToReceivedDataFromServer();
+                try
+                {
+                    WebClient Download = new WebClient();
+                    string result;
+                    return_value = Download.DownloadString("http://files.indigoflare.net/BDOToolBox/system/patchinfo_en_jp.html");
+                    this.PatchInfo.Content = return_value;
+                }
+                catch
+                {
+
+                    this.PatchInfo.Content = FailedToReceivedDataFromServer();
+                }
             }
+
+           
         }
         private void DebugRefresh_JPToTCN()
         {
@@ -1232,7 +1095,7 @@ Action(() =>
             }
             //
             //
-            ReadIni();
+            UIUpdate();
             text = this.gameInstallPath();
             flag = Directory.Exists(text);
             bdo_toolbox.config conf = new bdo_toolbox.config();
@@ -1293,5 +1156,9 @@ Action(() =>
             }
         }
 
+        private void targetsrv_eu_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
