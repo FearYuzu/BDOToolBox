@@ -217,11 +217,19 @@ namespace bdo_toolbox
                 if (IsTherePrestringtable)
                 {
                     Directory.CreateDirectory(InstallPath + "\\prestringtable");
+                    //MessageBox.Show("prestringtable created");
                 }
                 bool flag4 = !Directory.Exists(InstallPath + "\\prestringtable\\tw");
                 if (flag4)
                 {
                     Directory.CreateDirectory(InstallPath + "\\prestringtable\\tw");
+                   // MessageBox.Show("prestringtable_tw created");
+                }
+                bool font = !Directory.Exists(InstallPath + "\\prestringtable\\font");
+                if (font)
+                {
+                    Directory.CreateDirectory(InstallPath + "\\prestringtable\\font");
+                   // MessageBox.Show("font created");
                 }
                 this.startPatching(InstallPath);
                
@@ -588,6 +596,9 @@ namespace bdo_toolbox
             //string keyNameNAEU = string.Format("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{C1F96C92-7B8C-485F-A9CD-37A0708A2A60}", Wow.Is64BitOperatingSystem ? "Wow6432Node\\" : "");
             string keyNameKR = string.Format("HKEY_CURRENT_USER\\SOFTWARE\\DaumGames\\black", Wow.Is64BitOperatingSystem ? "Wow6432Node\\" : "");
             string keyNameTW = string.Format("HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\BlackDesert");
+            var test = (string)Registry.GetValue(keyNameTW, "path", "");
+            debug_twpath.Content = "台湾鯖クライアント位置：\n" + test;
+
             if (targetsrv_jp.IsChecked == true)
             {
                 TargetSrv = (string)Registry.GetValue(KeyNameJP, "location", "");
@@ -1157,6 +1168,11 @@ Action(() =>
         }
 
         private void targetsrv_eu_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void RepairClient_Click(object sender, RoutedEventArgs e)
         {
 
         }

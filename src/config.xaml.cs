@@ -27,7 +27,7 @@ namespace bdo_toolbox
         public config()
         {
             InitializeComponent();
-            UIWatchDog();
+           // UIWatchDog();
             Activated += (s, e) =>
             {
                 if (flg)
@@ -39,11 +39,11 @@ namespace bdo_toolbox
                     flg = false;
                     if(MainWindow.IsUseMetaInjector == true)
                     {
-                        UseMetaInjector.IsChecked = true;
+                        //UseMetaInjector.IsChecked = true;
                     }
                     if(MainWindow.IsUseMetaInjector == false)
                     {
-                        UseMetaInjector.IsChecked = false;
+                        //UseMetaInjector.IsChecked = false;
                     }     
                 }
             };
@@ -75,16 +75,16 @@ namespace bdo_toolbox
         }
         private void UIWatchDog()
         {
-            if(UseMetaInjector.IsChecked == false)
-            {
-                MessageBox.Show("is now false");
-                MainWindow.IsUseMetaInjector = false;
-            }
-            if(UseMetaInjector.IsChecked == true)
-            {
-                MessageBox.Show("is now true");
-                MainWindow.IsUseMetaInjector = true;
-            }
+           // if(UseMetaInjector.IsChecked == false)
+           // {
+          //      MessageBox.Show("is now false");
+            //    MainWindow.IsUseMetaInjector = false;
+            //}
+           // if(UseMetaInjector.IsChecked == true)
+            //{
+           //     MessageBox.Show("is now true");
+            //    MainWindow.IsUseMetaInjector = true;
+           // }
         }
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
@@ -99,7 +99,7 @@ namespace bdo_toolbox
             UILang_English.Content = DefineUIContent.UILang_English;
             UILang_ChineseT.Content = DefineUIContent.UILang_HanT;
             UILang_ChineseS.Content = DefineUIContent.UILang_HanS;
-            UseMetaInjector.Content = DefineUIContent.UIPatchUseMetaInjector;
+           // UseMetaInjector.Content = DefineUIContent.UIPatchUseMetaInjector;
             upd.Content = DefineUIContent.UIPatchServer;
 
         }
@@ -146,7 +146,7 @@ namespace bdo_toolbox
             UILang_ChineseT.Content = "繁体中国語";
             UILang_ChineseS.Content = "簡体中国語";
             upd.Content = "パッチサーバーアドレス";
-            UseMetaInjector.Content = "MeraInjectorを用いてパッチを適用する";
+            //UseMetaInjector.Content = "MeraInjectorを用いてパッチを適用する";
            
         }
 
@@ -159,7 +159,7 @@ namespace bdo_toolbox
             UILang_ChineseT.Content = "Traditional Chinese";
             UILang_ChineseS.Content = "Simplified Chinese";
             upd.Content = "Patch Server Address";
-            UseMetaInjector.Content = "Use MetaInjector for Patch";
+            //UseMetaInjector.Content = "Use MetaInjector for Patch";
 
         }
 
@@ -172,7 +172,7 @@ namespace bdo_toolbox
             UILang_ChineseS.Content = "简体中文";
             UILang_ChineseT.Content = "繁体中文";
             upd.Content = "补丁服务器地址";
-            UseMetaInjector.Content = "使用MetaInjector";
+            //UseMetaInjector.Content = "使用MetaInjector";
 
         }
         private void Window_KeyAssign(object sender, KeyEventArgs e)
@@ -236,7 +236,7 @@ namespace bdo_toolbox
             UILang_ChineseS.Content = "簡體中文";
             UILang_ChineseT.Content = "繁體中文";
             upd.Content = "補丁服務器地址";
-            UseMetaInjector.Content = "使用MetaInjector";
+           // UseMetaInjector.Content = "使用MetaInjector";
         }
 
         private void UseMetaInjector_Checked(object sender, RoutedEventArgs e)
