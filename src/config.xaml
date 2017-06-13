@@ -7,15 +7,14 @@
         mc:Ignorable="d"
         Title="config" Height="300" Width="655.347" AllowsTransparency="True" WindowStyle="None" Background="#FF020202" Opacity="1" Foreground="White" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyAssign">
     <Grid>
-        <Image x:Name="bg2_jpg" Margin="-933,-387,-332,-393" Source="bg2.jpg" Stretch="Fill" Opacity="0.5"/>
+        <Image x:Name="bg2_jpg" Margin="-933,-393,-332,-387" Source="bg2.jpg" Stretch="Fill" Opacity="0.5"/>
         <GroupBox x:Name="UILangFrame" Header="UI Language" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="149" Width="170"/>
         <RadioButton x:Name="UILang_Japanese" Content="Japanese" HorizontalAlignment="Left" Margin="24,36,0,0" VerticalAlignment="Top" Foreground="White" Click="UILang_Japanese_Clicked"/>
         <RadioButton x:Name="UILang_English" Content="English" HorizontalAlignment="Left" Margin="24,56,0,0" VerticalAlignment="Top" Foreground="White"  Click="UILang_English_Clicked"/>
         <GroupBox x:Name="PatchFrame" Header="Patch Settings" HorizontalAlignment="Left" Margin="192,10,0,0" VerticalAlignment="Top" Height="149" Width="453"/>
         <RadioButton x:Name="UILang_ChineseS" Content="Chinese(Simplified)" HorizontalAlignment="Left" Margin="24,76,0,0" VerticalAlignment="Top" Foreground="White" Click="UILang_ChineseS_Clicked"/>
         <Label x:Name="upd" Content="Update Server" HorizontalAlignment="Left" Margin="206,33,0,0" VerticalAlignment="Top" Foreground="White"/>
-        <TextBox x:Name="UpdateURL" HorizontalAlignment="Left" Height="23" Margin="206,62,0,0" TextWrapping="Wrap" Text="http://files.indigoflare.net/bdotoolbox/patch/" VerticalAlignment="Top" Width="420"/>
-        <CheckBox x:Name="UseMetaInjector" Content="Use MetaInjector for Patch" HorizontalAlignment="Left" Margin="206,110,0,0" VerticalAlignment="Top" Foreground="White" IsChecked="false" Checked="UseMetaInjector_Checked"/>
+        <TextBox x:Name="UpdateURI" HorizontalAlignment="Left" Height="23" Margin="206,62,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="420"/>
         <Button x:Name="Apply" Content="Apply(A)" HorizontalAlignment="Left" Height="32" Margin="519,247,0,0" VerticalAlignment="Top" Width="116" Click="Apply_Click"/>
         <RadioButton x:Name="UILang_ChineseT" Content="Chinese(Traditional)" HorizontalAlignment="Left" Margin="24,96,0,0" VerticalAlignment="Top" Foreground="White" Click="UILang_ChineseT_Checked" />
 

@@ -14,9 +14,9 @@ using System.Windows.Shapes;
 
 namespace bdo_toolbox
 {
-    /// <summary>
-    /// RoutingAssigner.xaml の相互作用ロジック
-    /// </summary>
+    //
+    // Abolished
+    //
     public partial class RoutingAssigner : Window
     {
         public RoutingAssigner()

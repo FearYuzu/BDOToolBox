@@ -7,8 +7,7 @@
         mc:Ignorable="d"
         Title="Black Desert Online ToolBox - Main" Height="500.432" Width="760.406" Opacity="1.0" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen" Background="#FF111111" ResizeMode="NoResize" KeyDown="Window_PreviewKeyDown">
     <Grid>
-
-        <Image x:Name="bg_jpg" Margin="-372,-172,-397,-188" Source="bg.jpg" Stretch="Fill" Opacity="0.3"/>
+        <Image x:Name="image" Source="bg.jpg" HorizontalAlignment="Left" Height="899" Margin="-351,0,0,-399" VerticalAlignment="Top" Width="1111" Opacity="0.7"/>
         <Label x:Name="title" Content="BDO ToolBox" HorizontalAlignment="Left" Margin="130,57,0,0" VerticalAlignment="Top" Foreground="White" FontSize="32">
             <Label.Effect>
                 <DropShadowEffect/>
@@ -30,12 +29,12 @@
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
-        <Button x:Name="RoutingAssigner" Content="ルーティングアサイナ" HorizontalAlignment="Left" Margin="51,273,0,0" VerticalAlignment="Top" Width="199" Height="40" Click="RoutingAssigner_Click" BorderBrush="Black" Foreground="White" Background="#00DDDDDD">
+        <Button x:Name="MetaRefresh" Content="Metaリフレッシュ" HorizontalAlignment="Left" Margin="51,273,0,0" VerticalAlignment="Top" Width="199" Height="40" Click="MetaRefresh_Click" BorderBrush="Black" Foreground="White" Background="#00DDDDDD">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
-        <Label x:Name="label" Content="Version 0.15 α" HorizontalAlignment="Left" Margin="364,76,0,0" VerticalAlignment="Top" Foreground="White">
+        <Label x:Name="Version" Content="" HorizontalAlignment="Left" Margin="364,76,0,0" VerticalAlignment="Top" Foreground="White">
             <Label.Effect>
                 <DropShadowEffect/>
             </Label.Effect>
@@ -49,38 +48,52 @@
 
 
         </GroupBox>
-
-        <GroupBox x:Name="targetlang" Header="Target Language" HorizontalAlignment="Left" Margin="531,153,0,0" VerticalAlignment="Top" Height="176" Width="193" Foreground="#FFBBF0FF">
-
-            <StackPanel Orientation="Horizontal" Name="Stack1">
-
-
-            </StackPanel>
-        </GroupBox>
-        <RadioButton x:Name="targetsrv_jp" GroupName="Server" Content="Japan" HorizontalAlignment="Left" Margin="331,179,0,0" VerticalAlignment="Top" Foreground="White" Checked="targetsrv_jp_Checked"/>
-        <RadioButton x:Name="targersrv_kr"  GroupName="Server" Content="Korea" HorizontalAlignment="Left" Margin="331,199,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
-        <RadioButton x:Name="targetsrv_eu"  GroupName="Server" Content="Europe/North America" HorizontalAlignment="Left" Margin="331,219,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="True" Checked="targetsrv_eu_Checked"/>
-        <RadioButton x:Name="targetsrv_tw" GroupName="Server" Content="Russia" HorizontalAlignment="Left" Margin="331,239,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
+        <RadioButton x:Name="targetsrv_jp" GroupName="Server" Content="Japan" HorizontalAlignment="Left" Margin="331,179,0,0" VerticalAlignment="Top" Foreground="White" Checked="targetsrv_jp_Checked" IsEnabled="False">
+            <RadioButton.Effect>
+                <DropShadowEffect/>
+            </RadioButton.Effect>
+        </RadioButton>
+        <RadioButton x:Name="targersrv_kr"  GroupName="Server" Content="Korea" HorizontalAlignment="Left" Margin="331,199,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false">
+            <RadioButton.Effect>
+                <DropShadowEffect/>
+            </RadioButton.Effect>
+        </RadioButton>
+        <RadioButton x:Name="targetsrv_eu"  GroupName="Server" Content="Europe/North America" HorizontalAlignment="Left" Margin="331,219,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="False" Checked="targetsrv_eu_Checked">
+            <RadioButton.Effect>
+                <DropShadowEffect/>
+            </RadioButton.Effect>
+        </RadioButton>
+        <RadioButton x:Name="targetsrv_tw" GroupName="Server" Content="Taiwan" HorizontalAlignment="Left" Margin="331,239,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="False">
+            <RadioButton.Effect>
+                <DropShadowEffect/>
+            </RadioButton.Effect>
+        </RadioButton>
         <GroupBox x:Name="groupBox" Header="Version Info / Patch Note" HorizontalAlignment="Left" Height="141" Margin="315,334,0,0" VerticalAlignment="Top" Width="409" Foreground="#FFBBF0FF"/>
         <Label x:Name="PatchInfo" Content="" HorizontalAlignment="Left" Margin="331,356,0,0" VerticalAlignment="Top" Foreground="#FFFFFEFE">
             <Label.Effect>
                 <DropShadowEffect/>
             </Label.Effect>
         </Label>
-        <RadioButton x:Name="lang_ja" GroupName="Language" Content="Japanese" HorizontalAlignment="Left" Margin="544,180,0,0" VerticalAlignment="Top" Foreground="White" Checked="lang_ja_Checked"/>
-        <RadioButton x:Name="lang_en" GroupName="Language" Content="English" HorizontalAlignment="Left" Margin="544,199,0,0" VerticalAlignment="Top" Foreground="White" Checked="lang_en_Checked"/>
-        <RadioButton x:Name="lang_scn" GroupName="Language" Content="Chinese (simplified)" HorizontalAlignment="Left" Margin="544,219,0,0" VerticalAlignment="Top" Foreground="White" IsEnabled="false"/>
-        <RadioButton x:Name="lang_tcn" GroupName="Language" Content="Chinese (Traditional)" HorizontalAlignment="Left" Margin="544,239,0,0" VerticalAlignment="Top" Foreground="White" Checked="lang_tcn_Checked"/>
-        <Image x:Name="black1_png" Margin="27,23,656,398" Source="black1.png" Stretch="Fill"/>
         <Label x:Name="label1" Content="Key Assign:             Config:(C) Version:(V)  Debug Menu:(D) Exit:(Esc)" HorizontalAlignment="Left" Margin="364,23,0,0" VerticalAlignment="Top" Foreground="White">
             <Label.Effect>
                 <DropShadowEffect/>
             </Label.Effect>
         </Label>
-        <Button x:Name="Repair_Client" Content="ファイル修復を行う" HorizontalAlignment="Left" Margin="51,380,0,0" VerticalAlignment="Top" Width="199" Height="40" Click="RepairClient_Click" Background="#00DDDDDD" BorderBrush="Black" Foreground="White">
+        <Button x:Name="Exit" Content="終了" HorizontalAlignment="Left" Margin="51,380,0,0" VerticalAlignment="Top" Width="199" Height="40" Click="RepairClient_Click" Background="#00DDDDDD" BorderBrush="Black" Foreground="White">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
+        <Label x:Name="info" Content="" HorizontalAlignment="Left" Height="100" Margin="325,356,0,0" VerticalAlignment="Top" Foreground="White">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <RadioButton x:Name="targetsrv_gamez" GroupName="Server" Content="Gamez BD(Private)" HorizontalAlignment="Left" Margin="331,259,0,0" VerticalAlignment="Top" Foreground="White" Checked="targetsrv_gamez_Checked">
+            <RadioButton.Effect>
+                <DropShadowEffect/>
+            </RadioButton.Effect>
+        </RadioButton>
+
     </Grid>
 </Window>

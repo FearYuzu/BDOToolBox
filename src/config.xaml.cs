@@ -72,6 +72,7 @@ namespace bdo_toolbox
                     UILang_ChineseT.IsChecked = true;
                     break;
             }
+            UpdateURI.Text = MainWindow.PatchStreamURI;
         }
         private void UIWatchDog()
         {
@@ -101,13 +102,14 @@ namespace bdo_toolbox
             UILang_ChineseS.Content = DefineUIContent.UILang_HanS;
            // UseMetaInjector.Content = DefineUIContent.UIPatchUseMetaInjector;
             upd.Content = DefineUIContent.UIPatchServer;
+            
 
         }
         public void WriteSettings()
         {
-            MessageBox.Show(MainWindow.IsUseMetaInjector.ToString());
+            //MessageBox.Show(MainWindow.IsUseMetaInjector.ToString());
             StreamWriter Write = new StreamWriter("config.ini", false);
-            Write.WriteLine("[key]=[content]");
+            //Write.WriteLine("[key]=[content]");
             if(UILang_Japanese.IsChecked == true)
             {
                 Write.WriteLine("Language=Japanese");
@@ -126,11 +128,15 @@ namespace bdo_toolbox
             }
             Write.WriteLine("PingDestination=" + MainWindow.PingDestination);
             Write.WriteLine("PingingTimeSpan=" + MainWindow.TimeSpanSec);
-            Write.WriteLine("UseMetaInjector=" + MainWindow.IsUseMetaInjector.ToString());
-            
-            Write.WriteLine("PatchStreamURI=" + UpdateURL.Text);
+            Write.WriteLine("PatchStreamURI=" + UpdateURI.Text);
+            Write.WriteLine("PatchInfoURI_JP="+ MainWindow.PatchInformationURI_JP);
+            Write.WriteLine("PatchInfoURI_EN="+ MainWindow.PatchInformationURI_EN);
+            Write.WriteLine("PatchInfoURI_TW=" + MainWindow.PatchInformationURI_TW);
+            Write.WriteLine("PatchInfoURI_Gamez=" + MainWindow.PatchInformationURI_Gamez);
             Write.WriteLine("BDONAEU_ClientPath=" + MainWindow.BDONAEU_ClientPath);
-            
+            Write.WriteLine("BDOGamez_ClientPath="+MainWindow.BDOGamez_ClientPath);
+            Write.WriteLine("PatchFileName_TW="+ MainWindow.PatchFileName_TW);
+            Write.WriteLine("PatchFileName_Gamez=" + MainWindow.PatchFileName_Gamez);
             Write.Close();
             Write.Dispose();
             

@@ -59,6 +59,15 @@ namespace bdo_toolbox
                     {
                         ping.Content = "Ping:" + Reply.RoundtripTime + "ms";
                     }
+                    if(Reply.RoundtripTime >= 100)
+                    {
+                        ping.Foreground = Brushes.Yellow;
+                        
+                    }
+                    if(Reply.RoundtripTime >= 200)
+                    {
+                        ping.Foreground = Brushes.Red;
+                    }
                     if (MainWindow.TimeSpanSec < 3)
                     {
                         main.PingingTimeSpan_NotAllowed();
@@ -70,19 +79,33 @@ namespace bdo_toolbox
                         mTimer.Start();
                     }
                     break;
-                case "KR-Auth":
+                case "Taiwan-KR":
                     
-                    Reply = p.Send("blackauth.black.game.daum.net");
+                    Reply = p.Send("inven.co.kr");
                     if (Reply.Status == IPStatus.Success)
                     {
                         ping.Content = "Ping:" + Reply.RoundtripTime + "ms";
+                    }
+                    if (Reply.RoundtripTime <= 100)
+                    {
+                        ping.Foreground = Brushes.LightGreen;
+
+                    }
+                    if (Reply.RoundtripTime >= 100)
+                    {
+                        ping.Foreground = Brushes.Yellow;
+
+                    }
+                    if (Reply.RoundtripTime >= 200)
+                    {
+                        ping.Foreground = Brushes.Red;
                     }
                     if (MainWindow.TimeSpanSec < 3)
                     {
                         main.PingingTimeSpan_NotAllowed();
                         mTimer.Stop();
                         mTimer.Interval = TimeSpan.FromSeconds(3);
-                        MainWindow.TimeSpanSec = 3;
+                        MainWindow.TimeSpanSec = 2;
                         //MessageBox.Show("Alert" + "TimeSpan:" + main.TimeSpanSec);
                         conf.WriteSettings();
                         mTimer.Start();
