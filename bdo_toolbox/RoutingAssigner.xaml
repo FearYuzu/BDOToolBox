@@ -1,0 +1,60 @@
+﻿<Window x:Class="bdo_toolbox.RoutingAssigner"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:bdo_toolbox"
+        mc:Ignorable="d"
+        Title="Routing Assigner" Height="700" Width="600" AllowsTransparency="True" WindowStyle="None" Opacity="1" Background="Black" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Image x:Name="World_08_jpg" Margin="-867,-432,-753,-348" Source="World_08.jpg" Stretch="Fill" Opacity="0.5"/>
+        <Label x:Name="ServerAddress" Content="SoftEther VPN Server Address:" HorizontalAlignment="Left" Margin="25,86,0,0" VerticalAlignment="Top" Foreground="White">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="ServerPort" Content="SoftEther VPN Server Port:" HorizontalAlignment="Left" Margin="25,112,0,0" VerticalAlignment="Top" Foreground="White">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="ServerVHub" Content="SoftEther VPN Server Virtual HUB:" HorizontalAlignment="Left" Margin="25,138,0,0" VerticalAlignment="Top" Foreground="White">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="UserName" Content="User Name:" HorizontalAlignment="Left" Margin="25,164,0,0" VerticalAlignment="Top" Foreground="White">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="Password" Content="Password:" HorizontalAlignment="Left" Margin="25,190,0,0" VerticalAlignment="Top" Foreground="White">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="VPNGateway" Content="VPN Server Gateway:" HorizontalAlignment="Left" Margin="25,236,0,0" VerticalAlignment="Top" Foreground="White">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="OriginGateway" Content="Your Router Gateway:" HorizontalAlignment="Left" Margin="25,262,0,0" VerticalAlignment="Top" Foreground="White">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <CheckBox x:Name="JP_Server" Content="Apply to Japan Server" HorizontalAlignment="Left" Margin="25,305,0,0" VerticalAlignment="Top" Foreground="#FFFFFBFB">
+            <CheckBox.Effect>
+                <DropShadowEffect/>
+            </CheckBox.Effect>
+        </CheckBox>
+        <CheckBox x:Name="JP_Server_Copy" Content="Apply to EU/NA Server" HorizontalAlignment="Left" Margin="25,325,0,0" VerticalAlignment="Top" Foreground="#FFFFFBFB">
+            <CheckBox.Effect>
+                <DropShadowEffect/>
+            </CheckBox.Effect>
+        </CheckBox>
+
+
+
+    </Grid>
+</Window>

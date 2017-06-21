@@ -3,20 +3,52 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bdo_toolbox", "bdo_toolbox\bdo_toolbox.csproj", "{251B3916-A2DB-48B2-AB14-5B4BEC41BF5D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{66B39998-0087-4F53-99AD-AD437BACBD7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bdo_toolbox", "bdo_toolbox\bdo_toolbox.csproj", "{CE87E38E-5243-49EF-944E-80FF426D4999}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{251B3916-A2DB-48B2-AB14-5B4BEC41BF5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{251B3916-A2DB-48B2-AB14-5B4BEC41BF5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{251B3916-A2DB-48B2-AB14-5B4BEC41BF5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{251B3916-A2DB-48B2-AB14-5B4BEC41BF5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Debug|x64.ActiveCfg = Debug|x64
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Debug|x64.Build.0 = Debug|x64
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Debug|x86.ActiveCfg = Debug|x86
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Debug|x86.Build.0 = Debug|x86
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Release|x64.ActiveCfg = Release|x64
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Release|x64.Build.0 = Release|x64
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Release|x86.ActiveCfg = Release|x86
+		{CE87E38E-5243-49EF-944E-80FF426D4999}.Release|x86.Build.0 = Release|x86
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Debug|x64.Build.0 = Debug|Any CPU
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Debug|x86.Build.0 = Debug|Any CPU
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Release|x64.ActiveCfg = Release|Any CPU
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Release|x64.Build.0 = Release|Any CPU
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Release|x86.ActiveCfg = Release|Any CPU
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CE87E38E-5243-49EF-944E-80FF426D4999} = {66B39998-0087-4F53-99AD-AD437BACBD7F}
+		{8A5A0C15-52A1-4A2F-8479-B9B97C69977A} = {66B39998-0087-4F53-99AD-AD437BACBD7F}
 	EndGlobalSection
 EndGlobal

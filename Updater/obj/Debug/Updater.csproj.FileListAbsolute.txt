@@ -1,0 +1,5 @@
+C:\Users\S.Yamada\documents\visual studio 2015\Projects\bdo_toolbox\Updater\bin\Debug\Updater.exe.config
+C:\Users\S.Yamada\documents\visual studio 2015\Projects\bdo_toolbox\Updater\bin\Debug\Updater.exe
+C:\Users\S.Yamada\documents\visual studio 2015\Projects\bdo_toolbox\Updater\bin\Debug\Updater.pdb
+C:\Users\S.Yamada\documents\visual studio 2015\Projects\bdo_toolbox\Updater\obj\Debug\Updater.exe
+C:\Users\S.Yamada\documents\visual studio 2015\Projects\bdo_toolbox\Updater\obj\Debug\Updater.pdb

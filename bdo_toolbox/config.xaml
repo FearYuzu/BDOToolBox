@@ -1,0 +1,22 @@
+﻿<Window x:Class="bdo_toolbox.config"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:bdo_toolbox"
+        mc:Ignorable="d"
+        Title="config" Height="300" Width="655.347" AllowsTransparency="True" WindowStyle="None" Background="#FF020202" Opacity="1" Foreground="White" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyAssign">
+    <Grid>
+        <Image x:Name="bg2_jpg" Margin="-933,-393,-332,-387" Stretch="Fill" Opacity="0.5" Source="bg2.jpg"/>
+        <GroupBox x:Name="UILangFrame" Header="UI Language" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="149" Width="170"/>
+        <RadioButton x:Name="UILang_Japanese" Content="Japanese" HorizontalAlignment="Left" Margin="24,36,0,0" VerticalAlignment="Top" Foreground="White" Click="UILang_Japanese_Clicked"/>
+        <RadioButton x:Name="UILang_English" Content="English" HorizontalAlignment="Left" Margin="24,56,0,0" VerticalAlignment="Top" Foreground="White"  Click="UILang_English_Clicked"/>
+        <GroupBox x:Name="PatchFrame" Header="Patch Settings" HorizontalAlignment="Left" Margin="192,10,0,0" VerticalAlignment="Top" Height="149" Width="453"/>
+        <RadioButton x:Name="UILang_ChineseS" Content="Chinese(Simplified)" HorizontalAlignment="Left" Margin="24,76,0,0" VerticalAlignment="Top" Foreground="White" Click="UILang_ChineseS_Clicked"/>
+        <Label x:Name="upd" Content="Update Server" HorizontalAlignment="Left" Margin="206,33,0,0" VerticalAlignment="Top" Foreground="White"/>
+        <TextBox x:Name="UpdateURI" HorizontalAlignment="Left" Height="23" Margin="206,62,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="420"/>
+        <Button x:Name="Apply" Content="Apply(A)" HorizontalAlignment="Left" Height="32" Margin="519,247,0,0" VerticalAlignment="Top" Width="116" Click="Apply_Click"/>
+        <RadioButton x:Name="UILang_ChineseT" Content="Chinese(Traditional)" HorizontalAlignment="Left" Margin="24,96,0,0" VerticalAlignment="Top" Foreground="White" Click="UILang_ChineseT_Checked" />
+
+    </Grid>
+</Window>

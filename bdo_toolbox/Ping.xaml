@@ -1,0 +1,28 @@
+﻿<Window x:Class="bdo_toolbox.Ping"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:bdo_toolbox"
+        mc:Ignorable="d"
+        Title="Ping" Height="77.075" Width="628.43" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Visibility="Visible" Background="Transparent" Topmost="True">
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem x:Name="MenuClose" Header="閉じる" Click="Close_Click"/>
+
+        </ContextMenu>
+    </Window.ContextMenu>
+    <Grid>
+        <Label x:Name="ping" Content="Ping:" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Foreground="#FF0DDE89" FontSize="30.333">
+            <Label.Effect>
+                <DropShadowEffect Color="#FF0E0D0D"/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="Server" Content="Server:" HorizontalAlignment="Left" Margin="200,16,0,0" VerticalAlignment="Top" Foreground="#FF0DDE89" FontSize="30.333" Width="381">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+
+    </Grid>
+</Window>
